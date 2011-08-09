@@ -75,13 +75,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cg.cpp" />
+    <ClCompile Include="cg.simp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cg.alg.hpp" />
     <ClInclude Include="cg.hpp" />
-    <ClInclude Include="cg_alg.hpp" />
-    <ClInclude Include="cg_line.hpp" />
-    <ClInclude Include="cg_meta.hpp" />
-    <ClInclude Include="cg_vector.hpp" />
+    <ClInclude Include="cg.line.hpp" />
+    <ClInclude Include="cg.meta.hpp" />
+    <ClInclude Include="cg.vector.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

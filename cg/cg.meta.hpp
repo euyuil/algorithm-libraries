@@ -47,6 +47,7 @@ public:
 
 	static bool iszero(T a) {
 		return !(a < -eps || a > eps);
+		// return !sgn(a);
 	}
 
 	static bool isasc(T a, T b, T c) {
