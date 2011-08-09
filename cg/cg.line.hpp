@@ -1,9 +1,21 @@
 #ifndef _CG_LINE_HPP_
 #define _CG_LINE_HPP_
 
-/*********************************************
- * GATeLib :: Computational Geometry :: Line *
- *********************************************/
+/*****************************************************************
+ * GATeLib :: Computational Geometry :: Line, Line Segment & Ray *
+ *****************************************************************/
+
+#include "cg.meta.hpp"
+#include "cg.vector.hpp"
+
+namespace gatelib {
+
+namespace cg {
+
+template <typename T> class line2;
+template <typename T> class lineseg2;
+template <typename T> class ray2;
+
 
 /**
  * @brief The class of 2d lines determined by 2 points.
@@ -12,6 +24,12 @@
 template <typename T> class line2
 {
 public:
+	line2(T x1, T y1, T x2, T y2) : a(x1, y1), b(x2, y2) { }
+	line2(const vector2 &u, const vector2 &v) : a(u), b(v) { }
+	line2(const lineseg2 &s) : a(s.a), b(s.b) { }
+	line2(const ray2 &r) : a(r.a), b(r) { }
+
+public:
 
 	/**
 	 * @brief Gets the direction vector of the line.
@@ -19,17 +37,17 @@ public:
 	 * @date 2011-07-28
 	 */
 
-	vector2<T> dir() const {
-		return b - a;
-	}
+	vector2<T> dir() const { return b - a; }
 
 public:
 
 	/**
-	 * @brief Gets the relationship between this and a given vector.
+	 * @brief Gets the relationship between this and a given line.
 	 * @param foo : The given line.
-	 * @return The relationship between two lines.
-	 * @date 2011-07-29
+	 * @return The relationship between two lines. 0 means they are parallel;
+	 *         1 means one intersects the other; 2 means they are the same
+	 *         line.
+	 * @date 2011-08-09
 	 */
 
 	int rel(const line2 &foo) {
@@ -43,104 +61,130 @@ public:
 			T p = u.y * w.x, q = w.y * u.x;
 
 			if (unit<T>::eq(p, q) || unit<T>::iszero(p + q))
-				return relation.coincide_entire;
-			return relation.parallel_std;
+				return 2;
+			return 0;
 		}
-		return relation.intersect_std;
+		return 1;
 	}
 
 public:
-
-	vector2<T> a;
-	vector2<T> b;
+	vector2<T> a, b;
 };
 
 
 /**
- * Class lineseg2 is the class of 2D line segments represented by 2
- * vertices.
+ * @brief The class of 2d line segments represented by 2 vertexes.
  */
 
-template <typename T> class lineseg2 : public line2<T>
+template <typename T> class lineseg2 : class line2<T>
 {
 public:
-
-	enum relation
-	{
-		parallel_std = 1, // Standard parallel.
-		intersect_std = 2, // Standard intersect.
-		intersect_ncross = 4, // Have one common point but not cross.
-		coincide_partly = 8, // Partly coincide.
-		coincide_entire = 16, // Entirely coincide.
-		on_the_same_line = 32,
-		the_same = coincide_entire, // Alternative name.
-		parallel_nstd = coincide_partly | coincide_entire, // Nonstandard mask.
-		intersect_nstd = intersect_ncross | parallel_nstd, // Nonstandard mask.
-		parallel_gener = parallel_std | parallel_nstd, // Generalized mask.
-		intersect_gener = intersect_std | intersect_nstd // Generalized mask.
-	};
-
-	enum relation_vector2
-	{
-		on_the_lineseg = 1,
-		on_the_line = 2,
-		out_of_the_lineseg = 4,
-		out_of_the_line = 8
-	};
+	lineseg2(T x1, T y1, T x2, T y2) : a(x1, y1), b(x2, y2) { }
+	lineseg2(const vector2 &u, const vector2 &v) : a(u), b(v) { }
 
 private:
 
-	static bool in_range(const vector2 &p, const lineseg2 &l) {
-		return unit<T>::non_decreases(min(l.a.x, l.b.x), p.x, max(l.a.x, l.b.x))
-			&& unit<T>::non_decreases(min(l.a.y, l.b.y), p.y, max(l.a.y, l.b.y));
+	static bool in_range(const vector2<T> &p, const lineseg2 &l) {
+		vector2<T> pp1(l.a - p), pp2(l.b - p);
+		return meta<T>::sgn(pp1.dot(pp2)) <= 0;
+		/* return meta<T>::isndesc(min(l.a.x, l.b.x), p.x, max(l.a.x, l.b.x))
+			&& meta<T>::isndesc(min(l.a.y, l.b.y), p.y, max(l.a.y, l.b.y)); */
 	}
 
 public:
 
-	relation_vector2 relation_between(const vector2 &p) const
+	/**
+	 * @brief Get the relationship between this lineseg2 and a point.
+	 * @param p : The point.
+	 * @return The relationship between this lineseg2 and the point. 0 means
+	 *         the point is not on the lineseg2; 1 means the point is on the
+	 *         lineseg2.
+	 * @date 2011-08-09
+	 */
+
+	int rel(const vector2 &p) const
 	{
-		bool a = unit<T>::equals(T(0),
-			vector2<T>::cross_product(this->direction(), p - this->a));
-		if (a) return out_of_the_line | out_of_the_lineseg;
+		bool a = meta<T>::sgn(this->dir().cross(p - this->a));
+		if (a) return 0; // Point is not even on this line rather than segment.
 
 		if (in_range(p, *this))
-			return on_the_lineseg | on_the_line;
-		return on_the_line | out_of_the_lineseg;
+			return 1;
+		return 0; // On the line but not the segment.
 	}
 
 private:
 
-	static T relation_between_helper(
-		const vector2 &p, const lineseg2 &l, int &zeroes, int &ranges
+	static T rel_helper(
+		const vector2 &p, const lineseg2 &l, char &zs, char &rs
 	) {
-		T r = vector2<T>::cross_product(l.direction(), p - l.a);
-		if (unit<T>::equals(T(0), r)) {
-			++zeroes;
-			if (in_range(p, l))
-				++ranges;
+		T r = l.dir().cross(p - l.a);
+		zs <<= 1; rs <<= 1;
+		if (meta<T>::iszero(r)) { // r == 0 means p is on line l.
+			zs |= 1;
+			if (in_range(p, l)) rs |= 1; // Means p is on line segment l.
 		}
 		return r;
 	}
 
 public:
 
-	static relation relation_between(const lineseg2 &a, const lineseg2 &b)
+	/**
+	 * @brief Get the relationship between this lineseg2 and the other.
+	 * @param s : The other line segment.
+	 * @return The relationship between this lineseg2 and the other. 0 means
+	 *         they have no common point; 1 means one lineseg2 goes across the
+	 *         other, ie. standard intersection; 2 and above mean non-standard
+	 *         intersection.
+	 * @date 2011-08-09
+	 */
+
+	int rel(const lineseg2 &s)
 	{
-		int zeroes = 0, ranges = 0;
+		char zs = 0, rs = 0;
+		static const int mask = 0xaa;
 
-		T x = relation_between_helper(a.direction(), b.a - a.a, zeroes, ranges);
-		T y = relation_between_helper(a.direction(), b.b - a.a, zeroes, ranges);
-		T z = relation_between_helper(b.direction(), a.a - b.a, zeroes, ranges);
-		T w = relation_between_helper(b.direction(), a.b - b.a, zeroes, ranges);
+		T x = rel_helper(  dir(), s.a -   a, state);
+		T y = rel_helper(  dir(), s.b -   a, state);
+		T z = rel_helper(s.dir(),   a - s.a, state);
+		T w = rel_helper(s.dir(),   s - s.a, state);
 
-		if (zeroes == 0) {
-			if (unit<T>::lt(x * y, T(0)) && unit<T>::lt(z * w, T(0)))
-				return relation.intersect_std;
+		if (zs == 0) { // No point is on either line.
+			if (meta<T>::sgn(x * y) < 0 && meta<T>::sgn(z * w) < 0)
+				return 1;
 			return 0;
 		}
-		if (zeroes == 1
+		if (zs & rs)
+			return 2; // Non-standard intersection. May be more complex.
+		return 0; // One or two points is on a line but not segment.
 	}
+
+public:
+	vector2<T> a, b;
 };
 
+
+/**
+ * @brief The class of 2d rays represented by 2 points.
+ */
+
+template <typename T> class ray2 : class lineseg2<T>
+{
+public:
+	ray2(T x1, T y1, T x2, T y2) : a(x1, y1), b(x2, y2) { }
+	ray2(const vector2 &u, const vector2 &v) : a(u), b(v) { }
+
+public:
+	void make() {
+		vector2<T> d = dir() * abs(meta<T>::inf / max(d.x, d.y));
+		b = a + d;
+	}
+
+public:
+	vector2<T> a, b;
+};
+
+} // namespace cg
+
+} // namespace gatelib
 
 #endif /* _CG_LINE_HPP_ */
