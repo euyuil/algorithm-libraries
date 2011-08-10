@@ -9,15 +9,7 @@ using namespace std;
 #define eps 1e-8
 #define inf 1e8
 
-inline int sgn(double a) {
-	if (a < -eps) return -1;
-	else if (a > eps) return 1;
-	return 0;
-}
-
-inline bool lt(double a, double b) { return sgn(a - b) < 0; }
-inline bool gt(double a, double b) { return sgn(a - b) > 0; }
-inline bool eq(double a, double b) { return sgn(a - b) == 0; }
+// Basic structures.
 
 struct point {
 	double x, y;
@@ -35,9 +27,29 @@ struct point {
 	bool operator==(const point &p) const {
 		return !sgn(x - p.x) && !sgn(y - p.y);
 	}
-	double sqrmag() const { return x * x + y * y; }
-	double mag() const { return sqrt(sqrmag()); }
+	double magsqr() const { return x * x + y * y; }
+	double mag() const { return sqrt(magsqr()); }
 };
+
+struct line {
+	point a, b;
+	line() { }
+	line(const point &_a, const point &_b) : a(_a), b(_b) { }
+	point vec() const { return b - a; }
+	double len() const { return vec().mag(); }
+};
+
+// Utility functions.
+
+inline int sgn(double a) {
+	if (a <-eps) return -1;
+	if (a > eps) return 1;
+	return 0;
+}
+
+inline bool lt(double a, double b) { return sgn(a - b) < 0; }
+inline bool gt(double a, double b) { return sgn(a - b) > 0; }
+inline bool eq(double a, double b) { return sgn(a - b) == 0; }
 
 inline double cross(const point &a, const point &b) {
 	return a.x * b.y - b.x * a.y;
@@ -47,44 +59,85 @@ inline double dot(const point &a, const point &b) {
 	return a.x * b.x + a.y * b.y;
 }
 
-struct line {
-	point a, b;
-	line() { }
-	line(const point &_a, const point &_b) : a(_a), b(_b) { }
-	point dir() const { return b - a; }
-	double len() const { return dir().mag(); }
-};
+// Relationship detecting.
 
-// Whether line intersects segment.
-inline bool intersects(const line &l, const line &s) {
-	double a = cross(s.a - l.a, l.b - l.a);
-	double b = cross(s.b - l.a, l.b - l.a);
-	return sgn(a * b) <= 0;
+inline int relationship_point_line(const point &p, const line &l) {
+	return sgn(cross(p - l.a, l.vec())); // 0: on; -1: .|; 1: |..
 }
 
-// Intersection point of two lines.
-inline point intersection_point(const line &la, const line &lb) {
+inline int relationship_point_segment(const point &p, const line &s) {
+	int rp = sgn(cross(p - s.a, s.vec())); // Rel between p and the line s.
+	if (rp) return rp * 3; // -3: .|; 3: |..
+	point psa = s.a - p, psb = s.b - p;
+	int r = sgn(dot(psa, psb));
+	if (r < 0) return 0; // The point is on the segment between end-points.
+	if (r == 0) {
+		if (p == s.a) return -1; // The point is at s.a.
+		else return 1; // The point is at s.b.
+	}
+	if (psa.magsqr() <= psb.magsqr())
+		return -2; // The point is on the line s, near s.a.
+	return 2; // The point is on the line s, near s.b.
+}
+
+inline int relationship_line_line(const line &la, const line &lb) {
+	point u = la.vec(), v = lb.vec();
+	double x = u.y * v.x, y = v.y * u.x;
+	if (eq(x, y))
+		if (!relationship_point_line(la.a, lb))
+			return 2; // The same line.
+		else return 0; // They are parallel.
+	return 1; // The two lines intersect.
+}
+
+inline int relationship_line_segment(const line &l, const line &s) {
+	double a = cross(s.a - l.a, l.b - l.a);
+	double b = cross(s.b - l.a, l.b - l.a);
+	int sab = sgn(a * b), sa = sgn(a), sb = sgn(b);
+	if (sab > 0)
+		return 0; // No intersection point.
+	if (sab < 0)
+		return 1; // Standard intersection.
+	if (sa || sb)
+		return 2; // One of the end-points of the segment intersects the line.
+	return 3; // The segment is a part of the line.
+}
+
+inline int relationship_segment_segment(const line &sa, const line &sb) {
+	int saa = relationship_point_segment(sa.a, sb);
+	int sab = relationship_point_segment(sa.b, sb);
+	int sba = relationship_point_segment(sb.a, sa);
+	int sbb = relationship_point_segment(sb.b, sa);
+	if (saa * sab == -9 && sba * sbb == -9)
+		return 0; // Standard intersection (X).
+	char state[4] = {0};
+	++state[abs(saa)]; ++state[abs(sab)];
+	++state[abs(sba)]; ++state[abs(sbb)];
+	if (state[0] == 1 && state[3] == 3)
+		return 1; // Nonstandard intersection (T).
+	if (state[1] == 2 && state[3] == 2)
+		return 2; // Nonstandard intersection (7).
+	if (state[1] == 2 && state[2] == 2)
+		return 3; // Nonstandard intersection (--).
+	if (state[0] == 2 && state[2] == 2)
+		return 4; // Nonstandard intersection (~=-).
+	if (state[0] == 1 && state[1] == 2 && state[2] == 1)
+		return 5; // Nonstandard intersection (~=).
+	if (state[0] == 2 && state[2] == 2)
+		return 6; // Nonstandard intersection (Long fully cover short).
+	if (state[1] == 4)
+		return 7; // Nonstandard intersection (=).
+	// if (state[0] == 0 && state[1] == 0)
+	return 8; // No intersection. Maybe parallel, same-line, or others.
+}
+
+// Calculating.
+
+inline point intersection_point_line_line(const line &la, const line &lb) {
 	point x(la.b.x - la.a.x, la.b.y - la.a.y);
 	point y(lb.a.x - lb.b.x, lb.a.y - lb.b.y);
 	point b(lb.a.x - la.a.x, lb.a.y - la.a.y);
 	double below = cross(x, y), above1 = cross(b, y);
 	double f1 = above1 / below;
 	return la.a + (la.b - la.a) * f1;
-}
-
-inline bool is_point_on_line(const point &p, const line &l) {
-	return !sgn(cross(l.dir(), p - l.b));
-}
-
-// 0 parallel; 1 intersects; 2 same.
-inline int line_line_relationship(const line &la, const line &lb) {
-
-	point u = la.dir(), v = lb.dir();
-	double x = u.y * v.x, y = v.y * u.x;
-
-	if (eq(x, y))
-		if (is_point_on_line(la.a, lb))
-			return 2;
-		else return 0;
-	return 1;
 }

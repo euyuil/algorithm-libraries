@@ -141,7 +141,6 @@ public:
 	int rel(const lineseg2 &s)
 	{
 		char zs = 0, rs = 0;
-		static const int mask = 0xaa;
 
 		T x = rel_helper(  dir(), s.a -   a, state);
 		T y = rel_helper(  dir(), s.b -   a, state);
