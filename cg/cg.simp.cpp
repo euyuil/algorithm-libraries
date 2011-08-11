@@ -42,9 +42,7 @@ struct line {
 // Utility functions.
 
 inline int sgn(double a) {
-	if (a <-eps) return -1;
-	if (a > eps) return 1;
-	return 0;
+	return a > eps ? 1 : a < -eps ? -1 : 0;
 }
 
 inline bool lt(double a, double b) { return sgn(a - b) < 0; }
@@ -110,24 +108,17 @@ inline int relationship_segment_segment(const line &sa, const line &sb) {
 	int sbb = relationship_point_segment(sb.b, sa);
 	if (saa * sab == -9 && sba * sbb == -9)
 		return 0; // Standard intersection (X).
-	char state[4] = {0};
-	++state[abs(saa)]; ++state[abs(sab)];
-	++state[abs(sba)]; ++state[abs(sbb)];
-	if (state[0] == 1 && state[3] == 3)
-		return 1; // Nonstandard intersection (T).
-	if (state[1] == 2 && state[3] == 2)
-		return 2; // Nonstandard intersection (7).
-	if (state[1] == 2 && state[2] == 2)
-		return 3; // Nonstandard intersection (--).
-	if (state[0] == 2 && state[2] == 2)
-		return 4; // Nonstandard intersection (~=-).
-	if (state[0] == 1 && state[1] == 2 && state[2] == 1)
-		return 5; // Nonstandard intersection (~=).
-	if (state[0] == 2 && state[2] == 2)
-		return 6; // Nonstandard intersection (Long fully cover short).
-	if (state[1] == 4)
-		return 7; // Nonstandard intersection (=).
-	// if (state[0] == 0 && state[1] == 0)
+	char s[4] = {0};
+	++s[abs(saa)]; ++s[abs(sab)];
+	++s[abs(sba)]; ++s[abs(sbb)];
+	if (s[0] == 1 && s[3] == 3) return 1; // Nonstandard intersection (T).
+	if (s[1] == 2 && s[3] == 2) return 2; // Nonstandard intersection (7).
+	if (s[1] == 2 && s[2] == 2) return 3; // Nonstandard intersection (--).
+	if (s[0] == 2 && s[2] == 2) return 4; // Nonstandard intersection (~=-).
+	if (s[0] == 1 && s[1] == 2 && s[2] == 1) return 5; // n-std inters. (~=).
+	if (s[0] == 2 && s[2] == 2) return 6; // n-std inters. (Long fully cover short).
+	if (s[1] == 4) return 7; // Nonstandard intersection (=).
+	// if (s[0] == 0 && s[1] == 0)
 	return 8; // No intersection. Maybe parallel, same-line, or others.
 }
 
