@@ -1,131 +1,130 @@
-#include <queue>
-#include <map>
+/************************************************
+ * GATeLib :: String Algorithms :: Trie Pattern *
+ ************************************************/
+
+#include <cstring>
+#include <vector>
+#include <string>
+#include <ctype>
+#include <deque>
 
 using namespace std;
 
 namespace gatelib {
 
+namespace str {
+
+
+/**
+ * @brief An implementation for Trie Tree.
+ */
+
 class trie {
-
-public:
-
-	class node {
-	public:
-		node() :
-			edgeOthers(NULL),
-			previous(NULL),
-			dangerous(false)
-		{ }
-	public:
-		node &child(char ch) {
-			map<char, node>::iterator it;
-			it = edges.find(ch);
-			if (it == edges.end() && edgeOthers)
-				return *edgeOthers;
-			return it->second;
-		}
-		/* bool has_child(char ch) {
-			if (edgeOthers)
-				return true;
-			map<char, node>::iterator it;
-			it = edges.find(ch);
-			if (it == edges.end())
-				return false;
-			return true;
-		} */
-		iterator find_child(char ch) {
-			map<char, node>::iterator it;
-			it = edges.find(ch);
-			if (it == edges.end() && edgeOthers)
-				return edgeOthers;
-			return &it->second;
-		}
-	protected:
-		map<char, node> edges;
-		node *edgeOthers; // Needs destruction? Probably not.
-		node *previous;
-		bool dangerous;
-	};
-
-	typedef node *iterator, *pointer;
-	typedef const node *const_iterator, *const_pointer;
-
-public:
-
-	trie() {
-		zero.edgeOthers = &root;
-		root.previous = &zero;
-	}
-
-public:
-
-	iterator insert(const char *str) {
-		node *p = &root;
-		for ( ; *str; ++str)
-			p = p->child(*str);
-		p->dangerous = true;
-		return p;
-	}
-
-	trie &build() {
-		queue<node *> q;
-		q.push(&root);
-		while (!q.empty()) {
-			node *parent = q.front(); q.pop();
-			map<char, node>::iterator it;
-			for (it = parent->begin(); it != parent->end(); ++it) {
-				node *previous = it->second.previous;
-				while (previous) {
-					pointer iu = previous->find_child(it->first);
-					if (iu != previous->edges.end()) {
-						it->second.previous = &iu->second;
-						it->second.dangerous = iu->second.dangerous;
-						break;
-					}
-					previous = previous->previous;
-				}
-				q.push(&it->second);
-			}
-		}
-	}
-
-	iterator search(const char *str) {
-		const_pointer const_this = this;
-		const_iterator it = const_this->search(str);
-		return const_cast<iterator>(it);
-	}
-
-	const_iterator search(const char *str) const {
-		pointer p = &root;
-		map<char, node>::iterator it;
-		while (*str && (it = p->edges.find(*str)) != p->edges.end()) {
-			p = &it->second;
-			++str;
-		}
-		if (!*str)
-			return p;
-		return NULL;
-	}
-
-	iterator begin() {
-		return &root;
-	}
-
-	const_iterator begin() const {
-		return &root;
-	}
-
-	iterator end() {
-		return NULL;
-	}
-
-	const_iterator end() const {
-		return NULL;
-	}
 
 protected:
 
-	node zero, root;
+    struct node {
+        node *prev, oper[26];
+        bool danger, target;
+        node() : prev(NULL), danger(false), target(false) {
+            memset(oper, 0, sizeof(oper));
+        }
+        node *&operator[](char c) { return oper[std::tolower(c)]; }
+        void set_oper(node *p) {
+            node **begin = oper, **end = oper + 26;
+            for ( ; begin != end; ++begin)
+                *begin = p;
+        }
+        class iterator {
+        public:
+            iterator() : cur('a') { }
+            iterator(node *p) : ptr(p), cur('a') { }
+        public:
+            iterator &operator++() {
+                for (++cur; cur != 'z'+1; ++cur)
+                    if ((*p)[cur] != NULL)
+                        return *this;
+            }
+            node *&operator*() const {
+                return (*p)[cur];
+            }
+        protected:
+            char cur;
+            node *p;
+        };
+    };
+
+public:
+
+    trie() : updated(false) { }
+
+public:
+
+    void add_pattern(const std::string &p) { pat.push_back(p); updated = false; }
+    bool has_pattern(const std::string &p) {
+        return find(pat.begin(), pat.end(), p) != pat.end();
+    }
+    bool erase_pattern(const std::string &p) {
+        std::vector<std::string>::iterator it;
+        it = find(pat.begin(), pat.end(), p);
+        if (it == pat.end()) return false;
+        pat.erase(it);
+        updated = false;
+        return true;
+    }
+
+    std::vector<std::string>::const_iterator begin() const { return pat.begin(); }
+    std::vector<std::string>::const_iterator end() const { return pat.end(); }
+
+protected:
+
+    node *update_new() {
+        nod.push_back(node());
+        return &nod.back();
+    }
+
+    void update_insert(node &root, const std::string str) {
+        std::string::iterator it; node *p = &root;
+        for (it = str.begin; it != str.end(); ++it) {
+            if ((*p)[*it] == NULL)
+                (*p)[*it] = update_new();
+            p = p[*it];
+        }
+        p->danger = p->target = true;
+    }
+
+public:
+
+    void update() {
+        if (updated) return;
+
+        nod.clear(); nod.push_back(node());
+        for (size_t i = 0; i < pat.size(); ++i)
+            update_insert(nod[0], pat[i]);
+
+        node v; v.prev = NULL;
+        v.set_oper(nod[0]);
+        nod[0].prev = &v;
+
+        deque<node *> q;
+        q.push_back(nod[0]);
+        while (!q.empty()) {
+            node *p = q.front(); q.pop_front();
+            for (node::iterator
+        }
+
+        updated = true;
+    }
+
+protected:
+
+    std::vector<std::string> pat;
+    std::deque<node> nod;
+    bool updated;
+
 };
 
-} /* namespace gatelib */
+
+} // str
+
+} // gatelib
