@@ -23,12 +23,13 @@ private:
     public:
         typedef map<T, node *> elem_t;
         typedef typename elem_t::iterator iterator;
+		typedef typename elem_t::const_iterator const_iterator;
         node *prev; bool danger, target; elem_t elem;
         node() : prev(NULL), danger(false), target(false) { }
         node *rval(T c) const {
-            iterator it = elem.find(c);
+            const_iterator it = elem.find(c);
             if (it == elem.end()) return NULL;
-            return *it;
+            return it->second;
         }
         node *&lval(T c) { return elem[c]; }
         iterator begin() { return elem.begin(); }
@@ -64,12 +65,13 @@ public:
 
 public:
 
-    template <typename I> void insert(node *root, I begin, I end) {
-        for ( ; begin != end; ++begin) {
+	template <typename it> void insert(it begin, it end) {
+		node *root = &tree[1];
+		for ( ; begin != end; ++begin) {
             if (root->rval(*begin) == NULL)
                 root->lval(*begin) = create();
             root = root->rval(*begin);
-            alphabet.add(*begin);
+            alphabet.insert(*begin);
         }
         root->danger = root->target = true;
     }
