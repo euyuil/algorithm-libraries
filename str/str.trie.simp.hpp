@@ -21,83 +21,97 @@ private:
 
     class node {
     public:
-        typedef map<T, node *> elem_t;
+        typedef map<T, size_t> elem_t;
         typedef typename elem_t::iterator iterator;
 		typedef typename elem_t::const_iterator const_iterator;
-        node *prev; bool danger, target; elem_t elem;
-        node() : prev(NULL), danger(false), target(false) { }
-        node *rval(T c) const {
+        size_t prev; bool danger, target; elem_t elem;
+        node() : prev(-1), danger(false), target(false) { }
+        size_t rval(T c) const {
             const_iterator it = elem.find(c);
-            if (it == elem.end()) return NULL;
+            if (it == elem.end()) return -1;
             return it->second;
         }
-        node *&lval(T c) { return elem[c]; }
+        size_t &lval(T c) { return elem[c]; }
         iterator begin() { return elem.begin(); }
         iterator end() { return elem.end(); }
     };
 
 public:
 
+    trie() : updated(false) { reset(); }
+
+public:
+
+    void reset()
+    {
+        tree.clear(); tree.resize(2); updated = false;
+        tree[0].prev = -1; tree[1].prev = 0;
+    }
+
     void update()
     {
-        tree.clear(); tree.resize(2);
-        foreach (it, alphabet)
-            tree[0].lval(*it) = &tree[1];
-        tree[0].prev = NULL;
-        tree[1].prev = &tree[0];
-
-        deque<node *> qu;
+        deque<size_t> qu; qu.push_back(1);
         while (!qu.empty()) {
-            node *root = qu.front(); qu.pop_front();
-            foreach (it, *root) {
-                node *prev = root->prev;
-                while (prev) {
-                    if (prev->rval(it->first) != NULL) {
-                        it->second->prev = prev.rval(it->first);
-                        it->second->danger = it->second->prev->danger;
+            size_t ro = qu.front(); qu.pop_front();
+            foreach (it, tree[ro]) {
+                size_t pr = tree[ro].prev, i = it->second;
+                while (pr != -1) {
+                    if (tree[pr].rval(it->first) != -1) {
+                        tree[i].prev = tree[pr].rval(it->first);
+                        tree[i].danger = tree[tree[i].prev].danger;
                         break;
-                    } else prev = prev->prev;
+                    } else pr = tree[pr].prev;
                 }
                 qu.push_back(it->second);
             }
+        }
+        updated = true;
+    }
+
+    void dump() const {
+        for (size_t i = 0; i < tree.size(); ++i) {
+            printf("N%d,P%d:", i, tree[i].prev);
+            foreach (it, tree[i])
+                printf(" %c%d", it->first, it->second);
+            printf("\n");
         }
     }
 
 public:
 
 	template <typename it> void insert(it begin, it end) {
-		node *root = &tree[1];
+		size_t ro = 1; updated = false;
 		for ( ; begin != end; ++begin) {
-            if (root->rval(*begin) == NULL)
-                root->lval(*begin) = create();
-            root = root->rval(*begin);
-            alphabet.insert(*begin);
+            if (tree[ro].rval(*begin) == -1)
+                tree[ro].lval(*begin) = create();
+            ro = tree[ro].rval(*begin);
+            tree[0].lval(*begin) = 1;
         }
-        root->danger = root->target = true;
+        tree[ro].danger = tree[ro].target = true;
     }
 
     template <typename I> bool matches(I begin, I end) {
-        node *p = &tree[1];
+        size_t p = 1; if (!updated) update();
         for ( ; begin != end; ++begin) {
-            while (p->rval(*begin) == NULL)
-                p = p->prev;
-            p = p->rval(*begin);
-            if (p->danger) return true;
+            while (tree[p].rval(*begin) == -1)
+                p = tree[p].prev;
+            p = tree[p].rval(*begin);
+            if (tree[p].danger) return true;
         }
         return false;
     }
 
 private:
 
-    node *create() {
+    size_t create() {
         tree.push_back(node());
-        return &tree.back();
+        return tree.size() - 1;
     }
 
 private:
 
     deque<node> tree;
-    set<T> alphabet;
+    bool updated;
 };
 
 } // namespace str

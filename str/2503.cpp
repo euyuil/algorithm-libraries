@@ -12,12 +12,13 @@ int main(int argc, char *argv[]) {
     printf("Input patterns, without spaces, ends with 0: \n");
     while (scanf("%s", buffer)) {
         if (buffer[0] == '0') break;
-        tr.insert(buffer, buffer + strlen(buffer));
+        tr.insert((char *)buffer, buffer + strlen(buffer));
     }
     printf("\nInput strings, without spaces, ends with 0: \n");
     while (scanf("%s", buffer)) {
         if (buffer[0] == '0') break;
-        printf("%s\n", tr.matches(buffer, buffer + strlen(buffer)) ? "Found!" : "Not found!");
+        printf("%s\n", tr.matches((char *)buffer, buffer + strlen(buffer)) ? "Found!" : "Not found!");
     }
+    tr.dump();
     return EXIT_SUCCESS;
 }
