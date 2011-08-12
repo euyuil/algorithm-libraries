@@ -18,12 +18,6 @@
     <ClCompile Include="2503.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="str.kmp.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="str.trie.simp.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="str.kmp.hpp">

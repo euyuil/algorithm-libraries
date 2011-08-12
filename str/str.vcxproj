@@ -75,8 +75,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2503.cpp" />
-    <ClCompile Include="str.kmp.cpp" />
-    <ClCompile Include="str.trie.simp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="str.kmp.hpp" />
