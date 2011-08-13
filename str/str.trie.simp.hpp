@@ -1,5 +1,8 @@
 #include <iostream>
 #include <cstdlib>
+#include <utility>
+#include <vector>
+#include <string>
 #include <queue>
 #include <map>
 #include <set>
@@ -24,8 +27,8 @@ private:
 		typedef map<T, size_t> elem_t;
 		typedef typename elem_t::iterator iterator;
 		typedef typename elem_t::const_iterator const_iterator;
-        size_t prev; bool danger, target; elem_t elem;
-        node() : prev(0), danger(false), target(false) { }
+        size_t prev, patt; bool danger, target; elem_t elem;
+        node() : prev(0), patt(0), danger(false), target(false) { }
         size_t rval(T c) const {
             const_iterator it = elem.find(c);
             if (it == elem.end()) return 0;
@@ -47,7 +50,7 @@ public:
     void reset()
     {
         tree.clear(); tree.resize(2); updated = false;
-        tree[0].prev = -1; tree[1].prev = 0;
+        tree[0].prev = -1; tree[1].prev = 0; pat.clear();
     }
 
     void update()
@@ -56,7 +59,7 @@ public:
 		tree[0].prev = -1;
         while (!qu.empty()) {
             size_t ro = qu.front(); qu.pop_front();
-            for (node::iterator it = tree[ro].begin(); it != tree[ro].end(); ++it) {
+            for (typename node::iterator it = tree[ro].begin(); it != tree[ro].end(); ++it) {
                 size_t pr = tree[ro].prev, i = it->second;
                 while (pr != -1) {
                     if (tree[pr].rval(it->first) != -1) {
@@ -74,7 +77,7 @@ public:
     void dump() {
         for (size_t i = 0; i < tree.size(); ++i) {
             printf("N%d,P%d:", i, tree[i].prev);
-            for (node::iterator it = tree[i].begin(); it != tree[i].end(); ++it)
+            for (typename node::iterator it = tree[i].begin(); it != tree[i].end(); ++it)
 				printf(" %c%d", it->first, it->second);
 			printf("\n");
         }
@@ -84,25 +87,36 @@ public:
 
 	template <typename it> void insert(it begin, it end) {
 		size_t ro = 1; updated = false;
+        pat.push_back(string());
 		for ( ; begin != end; ++begin) {
             if (tree[ro].rval(*begin) == 0)
                 tree[ro].lval(*begin) = create();
             ro = tree[ro].rval(*begin);
             tree[0].lval(*begin) = 1;
+            pat[pat.size()-1] += *begin;
         }
         tree[ro].danger = tree[ro].target = true;
+        tree[ro].patt = pat.size() - 1;
     }
 
-    template <typename I> bool matches(I begin, I end) {
+    template <typename I> pair< I, vector<size_t> > find(I begin, I end) {
         size_t p = 1; if (!updated) update();
         for ( ; begin != end; ++begin) {
             while (p > 0 && tree[p].rval(*begin) == 0)
                 p = tree[p].prev;
 			p = tree[p].rval(*begin);
 			if (p < 1) p = 1;
-            if (tree[p].danger) return true;
+            if (tree[p].danger) {
+                size_t q = p; vector<size_t> v;
+                while (q && tree[q].danger) {
+                    if (tree[q].target)
+                        v.push_back(tree[q].patt);
+                    q = tree[q].prev;
+                }
+                return make_pair(begin, v);
+            }
         }
-        return false;
+        return make_pair(begin, vector<size_t>());
     }
 
 private:
@@ -116,6 +130,7 @@ private:
 
     deque<node> tree;
     bool updated;
+    vector<string> pat;
 };
 
 } // namespace str
