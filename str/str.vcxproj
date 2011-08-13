@@ -74,7 +74,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="2503.cpp" />
+    <ClCompile Include="1204.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="str.kmp.hpp" />
