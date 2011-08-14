@@ -40,8 +40,10 @@ public:
 		updated = false; pats.push_back(string());
 		for ( ; b != e; ++b) {
 			pats[paid] += *b;
-			if (tree[r][*b] == 0)
-				tree[r][*b] = create();
+			if (tree[r][*b] == 0) {
+                size_t temp = create();
+				tree[r][*b] = temp;
+            }
 			r = tree[r][*b];
 		}
 		tree[r].danger = tree[r].target = true;
