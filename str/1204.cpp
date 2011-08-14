@@ -1,147 +1,95 @@
-#include <iostream>
-#include <cstdlib>
-#include <utility>
+#include <iterator>
+#include <cstring>
 #include <vector>
 #include <string>
 #include <queue>
-#include <map>
-#include <set>
 
 using namespace std;
 
-#ifndef foreach
-#define foreach(i,c) for (__typeof((c).begin()) i = \
-	(c).begin(); i != (c).end(); ++i)
-#endif
-
-namespace gatelib {
-
-	namespace str {
-
-		template <typename T> class trie {
-
-		private:
-
-			class node {
-			public:
-				typedef map<T, size_t> elem_t;
-				typedef typename elem_t::iterator iterator;
-				typedef typename elem_t::const_iterator const_iterator;
-				size_t prev, patt; bool danger, target; elem_t elem;
-				node() : prev(0), patt(0), danger(false), target(false) { }
-				size_t rval(T c) const {
-					const_iterator it = elem.find(c);
-					if (it == elem.end()) return 0;
-					return it->second;
+class trie {
+private:
+	struct node {
+		size_t prev, paid, edge[26];
+		bool danger, target;
+		node() { memset(this, 0, sizeof(*this)); }
+		size_t &operator[](char a) { return edge[a - 'A']; }
+	};
+private:
+	bool updated;
+	vector<node> tree;
+	vector<string> pats;
+public:
+	trie() { reset(512, 32); }
+private:
+	void reset(size_t tresv, size_t paresv) {
+		tree.resize(2); pats.clear(); updated = false;
+		tree.reserve(tresv); pats.reserve(paresv);
+		for (char c = 'A'; c <= 'Z'; ++c)
+			tree[0][c] = 1;
+	}
+	size_t create() {
+		tree.push_back(node());
+		return tree.size() - 1;
+	}
+public:
+	const string &pattern(size_t i) {
+		return pats[i];
+	}
+	template <typename I> size_t insert(I b, I e) {
+		size_t r = 1, paid = pats.size();
+		updated = false; pats.push_back(string());
+		for ( ; b != e; ++b) {
+			pats[paid] += *b;
+			if (tree[r][*b] == 0)
+				tree[r][*b] = create();
+			r = tree[r][*b];
+		}
+		tree[r].danger = tree[r].target = true;
+		tree[r].paid = paid;
+		return paid;
+	}
+	void update() {
+		queue<size_t> qu; qu.push(1);
+		while (!qu.empty()) {
+			size_t r = qu.front(); qu.pop();
+			for (char c = 'A'; c <= 'Z'; ++c) {
+				if (tree[r][c] == 0) continue;
+				size_t p = tree[r].prev;
+				while (tree[p][c] == 0)
+					p = tree[p].prev;
+				tree[tree[r][c]].prev = tree[p][c];
+				qu.push(tree[r][c]);
+			}
+		}
+		updated = true;
+	}
+	template <typename I, typename F> size_t matches(I b, I e, F f) {
+		// typedef bool F(I i, size_t p);
+		if (!updated) update();
+		size_t p, r = 1, co = 0;
+		for ( ; b != e; ++b) {
+			while (r > 0 && tree[r][*b] == 0)
+				r = tree[r].prev;
+			r = p = tree[r][*b];
+			while (tree[p].danger) {
+				if (tree[p].target) {
+					I i = b; ++co;
+					advance(i, 1 - pats[tree[p].paid].size());
+					if (f(i, tree[p].paid)) return co;
 				}
-				size_t &lval(T c) { return elem[c]; }
-				const_iterator begin() const { return elem.begin(); }
-				const_iterator end() const { return elem.end(); }
-				iterator begin() { return elem.begin(); }
-				iterator end() { return elem.end(); }
-			};
-
-		public:
-
-			trie() : updated(false) { reset(); }
-
-		public:
-
-			void reset()
-			{
-				tree.clear(); tree.resize(2); updated = false;
-				tree[0].prev = -1; tree[1].prev = 0; pat.clear();
+				p = tree[p].prev;
 			}
-
-			void update()
-			{
-				deque<size_t> qu; qu.push_back(1);
-				tree[0].prev = -1;
-				while (!qu.empty()) {
-					size_t ro = qu.front(); qu.pop_front();
-					for (typename node::iterator it = tree[ro].begin(); it != tree[ro].end(); ++it) {
-						size_t pr = tree[ro].prev, i = it->second;
-						while (pr != -1) { // This code can make some tree node's prev = 0. wtf?!
-							if (tree[pr].rval(it->first) != 0) {
-								tree[i].prev = tree[pr].rval(it->first);
-								tree[i].danger = tree[i].danger || tree[tree[i].prev].danger;
-								break;
-							} else pr = tree[pr].prev;
-						}
-						qu.push_back(it->second);
-					}
-				}
-				updated = true;
-			}
-/*
-			void dump() {
-				for (size_t i = 0; i < tree.size(); ++i) {
-					printf("N%d,P%d:", i, tree[i].prev);
-					for (typename node::iterator it = tree[i].begin(); it != tree[i].end(); ++it)
-						printf(" %c%d", it->first, it->second);
-					printf("\n");
-				}
-			}
-*/
-		public:
-
-			template <typename it> void insert(it begin, it end) {
-				size_t ro = 1; updated = false;
-				pat.push_back(string());
-				for ( ; begin != end; ++begin) {
-					if (tree[ro].rval(*begin) == 0)
-						tree[ro].lval(*begin) = create();
-					ro = tree[ro].rval(*begin);
-					tree[0].lval(*begin) = 1;
-					pat[pat.size()-1] += *begin;
-				}
-				tree[ro].danger = tree[ro].target = true;
-				tree[ro].patt = pat.size() - 1;
-			}
-
-			template <typename I> vector< pair<I, size_t> > find(I begin, I end) {
-				size_t p = 1; if (!updated) update();
-				vector< pair<I, size_t> > v;
-				for ( ; begin != end; ++begin) {
-					while (p > 0 && tree[p].rval(*begin) == 0)
-						p = tree[p].prev;
-					p = tree[p].rval(*begin);
-					if (p < 1) p = 1;
-					if (tree[p].danger) {
-						size_t q = p;
-						while (q && tree[q].danger) {
-							if (tree[q].target)
-								v.push_back(make_pair(begin, tree[q].patt));
-							q = tree[q].prev;
-						}
-					}
-				}
-				return v;
-			}
-
-		private:
-
-			size_t create() {
-				tree.push_back(node());
-				return tree.size() - 1;
-			}
-
-		private:
-
-			deque<node> tree;
-			bool updated;
-			vector<string> pat;
-		};
-
-	} // namespace str
-
-} // namespace gatelib
+		}
+		return co;
+	}
+};
 
 #include <string>
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
 #include <cstring>
+#include <ctime>
 
 using namespace std;
 
@@ -177,17 +125,14 @@ public:
         return matrix[fi(dir, i, j)][fj(dir, i, j)];
     }
     size_t size(char ch) {
-        if ((ch - 'A') % 2)
-            return rows + cols - 1;
-        if ((ch / 2) % 2)
-            return cols;
+        if ((ch - 'A') & 1) return rows + cols - 1;
+        if ((ch / 2)  & 1) return cols;
         return rows;
     }
-    size_t len(int j) {
-        if (min(rows, cols) <= j && j <= max(rows, cols))
-            return min(rows, cols);
-        if (j > max(rows, cols))
-            return min(rows, cols) - (j - max(rows, cols));
+    size_t len(size_t j) {
+		size_t mi = min(rows, cols), ma = max(rows, cols);
+        if (mi <= j && j <= ma) return mi;
+        if (j > ma) return mi - (j - ma);
         return j;
     }
 protected:
@@ -207,15 +152,33 @@ protected:
         if (i <= rows) return 1;
         return i - rows + 1;
     }
-protected:
+public:
     char matrix[1111][1111];
     size_t rows, cols;
 };
 
 puzzle puz;
-vector<string> pat;
 size_t outx[1111], outy[1111];
 char outchar[1111];
+
+class addone {
+public:
+	addone(char *b, char d, size_t t) :
+		begin(b), direction(d), lineid(t) { }
+	bool operator()(char *it, size_t id) {
+		size_t index = size_t(it - begin) + 1;
+		outx[id] = puz.fi(direction, lineid, index)-1;
+		outy[id] = puz.fj(direction, lineid, index)-1;
+		outchar[id] = direction;
+		return false;
+	}
+private:
+	char *begin;
+	char direction;
+	size_t lineid;
+};
+
+char buffer[9999];
 
 int main(int argc, char *argv[]) {
 
@@ -227,35 +190,27 @@ int main(int argc, char *argv[]) {
 
     puz.reset(l, c);
     for (size_t i = 1; i <= l; ++i)
-        for (size_t j = 1; j <= c; ++j)
-            cin >> puz('C', i, j);
+        scanf("%s", puz.matrix[i] + 1);
 
-    gatelib::str::trie<char> tr;
+    trie tr;
     for (size_t i = 1; i <= w; ++i) {
-        string str;
-        cin >> str; pat.push_back(str);
-        tr.insert(str.begin(), str.end());
-    }clog << "Inserted." << endl;
+		scanf("%s", buffer);
+		char *bend = buffer + strlen(buffer);
+        tr.insert(buffer, bend);
+    }
 
     for (char ch = 'A'; ch <= 'H'; ++ch) {
         for (size_t i = 1; i <= puz.size(ch); ++i) {
-            string str;
+            char *bend = buffer;
             for (size_t j = 1; puz(ch, i, j); ++j)
-                str += puz(ch, i, j);
-			clog << ch << ' ' << i <<  endl;
-            vector< pair<string::iterator, size_t> > r;
-            r = tr.find(str.begin(), str.end());
-            for (size_t k = 0; k < r.size(); ++k) {
-                size_t index = size_t(r[k].first - str.begin()) + 1;
-                outx[r[k].second] = puz.fi(ch, i, index-pat[r[k].second].size()+1)-1;
-                outy[r[k].second] = puz.fj(ch, i, index-pat[r[k].second].size()+1)-1;
-				outchar[r[k].second] = ch;
-            }
+                *(bend++) = puz(ch, i, j);
+			*bend = '\0';
+            tr.matches(buffer, bend, addone(buffer, ch, i));
         }
-		clog << ch << " matched." << endl;
     }
 
-    for (size_t i = 0; i < pat.size(); ++i)
+    for (size_t i = 0; i < w; ++i)
         cout << outx[i] << ' ' << outy[i] << ' ' << outchar[i] << endl;
+
     return EXIT_SUCCESS;
 }

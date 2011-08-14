@@ -29,5 +29,8 @@
     <ClInclude Include="str.trie.simp.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="str.trie.again.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

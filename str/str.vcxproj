@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="str.kmp.hpp" />
+    <ClInclude Include="str.trie.again.hpp" />
     <ClInclude Include="str.trie.hpp" />
     <ClInclude Include="str.trie.simp.hpp" />
   </ItemGroup>
