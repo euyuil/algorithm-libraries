@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <vector>
 #include <cmath>
 
 using namespace std;
@@ -107,7 +108,7 @@ inline int rells(const line &l, const line &s) {
 }
 
 inline int relssraw(const line &sa, const line &sb) {
-	int r; char (*p)[4] = ((char) (*)[4])(&r);
+	int r; char (*p)[4] = (char (*)[4])(&r);
 	(*p)[0] = relps(sa.a, sb);
 	(*p)[1] = relps(sa.b, sb);
 	(*p)[2] = relps(sb.a, sa);
@@ -161,7 +162,7 @@ template <typename I> inline int relpo(const point &p, I b, I e) {
 }
 
 // Calculating.
-// inp: intersection point; area: area.
+// inp: intersection point; area: area; dis: distance.
 
 inline point inpll(const line &la, const line &lb) {
 	point x(la.b.x - la.a.x, la.b.y - la.a.y);
@@ -183,3 +184,59 @@ template <typename I> inline double areao(I b, I e) {
 	area += it->cross(*b);
 	return area / 2.0;
 }
+
+inline double dispp(const point &a, const point &b) {
+    return (b - a).mag();
+}
+
+inline double displ(const point &p, const line &l) {
+    return abs(cross(l.vec(), p - l.a)) / l.len();
+}
+
+/**
+ * @brief This class can calculate the convex hull of the given point set.
+ * @date 2011-08-15
+ */
+
+template <typename I, typename O> class graham {
+
+private:
+
+    O top;
+    vector<bool> used;
+    vector<size_t> stk;
+    
+public:
+
+    graham(I b, I e, O o) : top(o) {
+        sort(b, e, compare); I it;
+        size_t i = 0, n = e - b; int k = 0;
+        used.resize(n); stk.reserve(n);
+
+        for (it = b; i < 2 && it != e; ++i, ++it)
+            *(top++) = *it, used[i] = true, stk.push_back(i);
+		if (it == e) return; used[0] = false;
+
+        for ( ; it != e; ++it, ++i) {
+            while (stk.size() > 1 && ( k = sgn(cross( *(top-1) - *(top-2), *it - *(top-2) )) ) < 0)
+				--top, used[stk.back()] = false, stk.pop_back();
+			if (k == 0) --top; *(top++) = *it; used[i] = true; stk.push_back(i);
+        }
+
+        for (it = e - 1, --i; i < used.size(); --it, --i) {
+            if (used[i]) continue;
+            while (( k = sgn(cross( *(top-1) - *(top-2), *it - *(top-2) )) ) < 0) --top;
+			if (k == 0) --top; if (it == b) break; *(top++) = *it;
+        }
+    }
+
+    operator O() const { return top; }
+
+private:
+
+    static bool compare(const point &a, const point &b) {
+        int s = sgn(a.y - b.y);
+        if (s) return s < 0;
+        return lt(a.x, b.x);
+    }
+};

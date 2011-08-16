@@ -11,7 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cg.2.hpp" />
+    <ClInclude Include="..\..\..\include\cg.2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\cg.graham.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DF7CB93C-9609-411F-849F-DFCE0E201D99}</ProjectGuid>
