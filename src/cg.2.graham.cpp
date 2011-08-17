@@ -1,4 +1,4 @@
-#include "../include/cg.2.h"
+#include <cg.2.graham.h>
 
 #include <ctime>
 #include <vector>
@@ -11,7 +11,7 @@ using namespace std;
 
 typedef vector<point>::iterator iter;
 
-int main(int argc, char *argv[]) {
+int entry_cg_2_graham() {
 
 #ifdef GENERATE
 

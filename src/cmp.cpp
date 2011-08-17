@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <string>
 #include <cstdio>
+#include <ctime>
 
 using namespace std;
 
@@ -13,6 +14,7 @@ const string DEF_GEN    = "generator";
 
 struct PARAM {
 	string inp, outp, mypr, stdpr, gen, mout, sout;
+	size_t stdms, myms;
 };
 
 /**
@@ -33,14 +35,19 @@ void generate(const PARAM &p) {
  * @date 2011-08-16
  */
 
-size_t compare(const PARAM &p)
+size_t compare(PARAM &p)
 {
-
+	clock_t cl = clock();
 	system(p.stdpr.c_str());
+	p.stdms = clock() - cl;
+
 	remove(p.sout.c_str());
 	rename(p.outp.c_str(), p.sout.c_str());
 
+	cl = clock();
 	system(p.mypr.c_str());
+	p.myms = clock() - cl;
+
 	remove(p.mout.c_str());
 	rename(p.outp.c_str(), p.mout.c_str());
 
@@ -87,7 +94,8 @@ int main(int argc, char *argv[])
 			rename(param.mout.c_str(), ("diff_" + nu + "m_" + param.outp).c_str());
 			rename(param.inp.c_str(), ("diff_" + nu + "i_" + param.inp).c_str());
 		}
-		printf("%lu case(s) remaining, %lu case(s) found different.\n", t, c);
+		printf("%lu case(s) remaining, %lu case(s) found different. std %lums, my %lums.\n",
+			t, c, param.stdms, param.myms);
 	}
 
 	return EXIT_SUCCESS;
