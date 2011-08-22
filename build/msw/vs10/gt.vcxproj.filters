@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\gt.graph.adj.h" />
-    <ClInclude Include="..\..\..\include\gt.nwf.alg.h" />
+    <ClCompile Include="..\..\..\src\gt.demo.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\gt.demo.cpp" />
+    <ClInclude Include="..\..\..\include\gt.mat.dijkstra.h" />
+    <ClInclude Include="..\..\..\include\gt.mat.base.h" />
   </ItemGroup>
 </Project>

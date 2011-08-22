@@ -124,7 +124,7 @@ struct line
 {
 	point a, b;
 
-	inline line() { }
+	inline line() : a(0.0, 0.0), b(0.0, 0.0) { }
 	inline line(const point &_a, const point &_b) : a(_a), b(_b) { }
 	inline line(double x1, double y1, double x2, double y2) :
 		a(point(x1, y1)), b(point(x2, y2)) { }

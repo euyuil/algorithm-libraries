@@ -1,142 +1,126 @@
-#include <iostream>
 #include <cstdlib>
-#include <vector>
+#include <cstring>
 #include <cstdio>
 #include <cmath>
 
 using namespace std;
 
-#define inf 1e8
-#define eps 1e-12
+const double inf = 1e+8;
+const double eps = 0.0;
+const size_t mxn = 5000;
+const size_t mxe = 250000;
+
+struct point {
+	double x, y;
+	inline point() { }
+	inline point(double a, double b) : x(a), y(b) { }
+	inline point operator-(const point &p) const {
+		return point(x - p.x, y - p.y);
+	}
+	inline double magsqr() const { return x * x + y * y; }
+	inline double mag() const { return sqrt(magsqr()); }
+};
+
+struct line {
+	point a, b;
+	inline line() { }
+	inline line(const point &x, const point &y) : a(x), b(y) { }
+	inline line(double x, double y, double z, double w) : a(x, y), b(z, w) { }
+	inline point vec() const { return b - a; }
+	inline double len() const { return vec().mag(); }
+};
+
+struct gmatrix {
+	double w[mxn][mxn]; size_t n;
+	void reset() { memset(w, 0, sizeof(w)); }
+	void reset(double val) {
+		for (size_t i = 0; i < n; ++i)
+			for (size_t j = 0; j < n; ++j)
+				w[i][j] = val;
+	}
+};
+
+struct dijkstra {
+	double dist[mxn]; bool vs[mxn];
+	void reset(gmatrix &g, size_t s) {
+		memset(vs, 0, sizeof(vs));
+		for (size_t i = 0; i < g.n; ++i)
+			dist[i] = inf;
+		dist[s] = 0.0; vs[s] = true;
+	}
+	double solve(gmatrix &g, size_t s, size_t t) {
+		reset(g, s);
+		for(size_t i = 1; i < g.n; ++i) {
+			double val = inf; size_t k = -1;
+			for (size_t j = 0; j < g.n; ++j) {
+				if (vs[j]) continue;
+				if (dist[j] > g.w[s][j] + dist[s])
+					dist[j] = g.w[s][j] + dist[s];
+				if (val > dist[j]) {
+					val = dist[j]; k = j;
+				}
+			}
+			if (k == -1) break;
+			s = k; vs[k] = true;
+		}
+		return dist[t];
+	}
+};
 
 inline int sgn(double a) {
 	return a > eps ? 1 : a < -eps ? -1 : 0;
 }
 
-inline bool eq(double a, double b) { return sgn(a - b) == 0; }
-
-struct point {
-	double x, y;
-	point() : x(0.0), y(0.0) { }
-	point(double _x, double _y) : x(_x), y(_y) { }
-	double &operator[](bool i) { return i ? y : x; }
-	point operator+(const point &p) const {
-		return point(x + p.x, y + p.y);
-	}
-	point operator-(const point &p) const {
-		return point(x - p.x, y - p.y);
-	}
-	point operator*(double k) const {
-		return point(x * k, y * k);
-	}
-	point operator/(double k) const {
-		return point(x / k, y / k);
-	}
-	bool operator==(const point &p) const {
-		return !sgn(x - p.x) && !sgn(y - p.y);
-	}
-};
-
 inline double cross(const point &a, const point &b) {
 	return a.x * b.y - b.x * a.y;
 }
 
-inline double dot(const point &a, const point &b) {
-	return a.x * b.x + a.y * b.y;
-}
-
-struct line {
-	point a, b;
-	line() { }
-	line(const point &_a, const point &_b) : a(_a), b(_b) { }
-	line(double x1, double y1, double x2, double y2) :
-	a(point(x1, y1)), b(point(x2, y2)) { }
-	point &operator[](bool i) { return i ? b : a; }
-	point vec() const { return b - a; }
-};
-
 inline int relps(const point &p, const line &s) {
-	int rp = sgn(cross(p - s.a, s.vec()));
-	if (rp) return rp * 3;
-	point psa = s.a - p, psb = s.b - p;
-	int r = sgn(dot(psa, psb));
-	if (r < 0) return 0;
-	if (r == 0) return 1;
-	return 2;
-}
-
-inline int rells(const line &l, const line &s) {
-	double a = cross(s.a - l.a, l.b - l.a);
-	double b = cross(s.b - l.a, l.b - l.a);
-	int sab = sgn(a * b), sa = sgn(a), sb = sgn(b);
-	if (sab > 0) return 3;
-	if (sab < 0) return 0;
-	if (sa || sb) return 1;
-	return 2;
-}
-
-inline int relssraw(const line &sa, const line &sb) {
-	int r; signed char (*p)[4] = (signed char (*)[4])(&r);
-	(*p)[0] = relps(sa.a, sb); (*p)[1] = relps(sa.b, sb);
-	(*p)[2] = relps(sb.a, sa); (*p)[3] = relps(sb.b, sa);
-	return r;
-}
-
-inline int relss(const line &sa, const line &sb, int raw) {
-	signed char r[4], s[4] = {0};
-	*(int *)r = raw;
-	if (r[0] * r[1] == -9 && r[2] * r[3] == -9)
-		return 0;
-	++s[abs(r[0])]; ++s[abs(r[1])]; ++s[abs(r[2])]; ++s[abs(r[3])];
-	if (s[0] == 1 && s[3] == 3) return 1;
-	if (s[1] == 2 && s[3] == 2) return 2;
-	return 8;
+	return sgn(cross(p - s.a, s.vec()));
 }
 
 inline int relss(const line &sa, const line &sb) {
-	return relss(sa, sb, relssraw(sa, sb));
+	int a = relps(sa.a, sb), b = relps(sa.b, sb);
+	int c = relps(sb.a, sa), d = relps(sb.b, sa);
+	if (a * b == -1 && c * d == -1)
+		return 0;
+	return 1;
 }
 
-inline point inpll(const line &la, const line &lb) {
-	double u = cross(la.vec(), point(lb.b - la.b));
-	double v = cross(la.vec(), point(lb.a - la.b));
-	return (lb.b * v - lb.a * u) / (v - u);
+point ps[555]; size_t pc = 2;
+line ls[999]; size_t lc = 0;
+gmatrix gr; dijkstra dij;
+
+bool test() {
+    size_t n; scanf("%lu", &n); if (n == -1) return false;
+    pc = 2; ps[0] = point(0.0, 5.0); ps[1] = point(10.0, 5.0); lc = 0;
+    while (n--) {
+        double x, a, b, c, d;
+        scanf("%lf%lf%lf%lf%lf", &x, &a, &b, &c, &d);
+        ps[pc++] = point(x, a); ps[pc++] = point(x, b);
+        ps[pc++] = point(x, c); ps[pc++] = point(x, d);
+        if (sgn(a)) ls[lc++] = line(x, 0, x, a);
+        if (sgn(d - 10.0)) ls[lc++] = line(x, d, x, 10.0);
+        ls[lc++] = line(x, b, x, c);
+    }
+	gr.n = pc; gr.reset(inf);
+    for (size_t i = 0; i < pc; ++i) {
+        for (size_t j = i + 1; j < pc; ++j) {
+            line seg(ps[i], ps[j]);
+            for (size_t k = 0; k < lc; ++k)
+                if (relss(seg, ls[k]) == 0)
+					goto invalid_segment;
+            gr.w[i][j] = gr.w[j][i] = seg.len();
+invalid_segment:
+			; // Notice to add this.
+        }
+    }
+    double result = dij.solve(gr, 0, 1);
+    printf("%0.2f\n", result);
+    return true;
 }
 
-int main(int argc, char *argv[]) {
-
-	freopen("input.txt", "r", stdin);
-	freopen("output.txt", "w", stdout);
-
-	size_t t; cin >> t;
-	while (t--) {
-		line u, v; line *ls[2]; ls[0] = &u; ls[1] = &v;
-		cin >> u.a.x >> u.a.y >> u.b.x >> u.b.y;
-		cin >> v.a.x >> v.a.y >> v.b.x >> v.b.y;
-		if (relss(u, v) < 3) {
-			point w = inpll(u, v); double area = 0.0;
-
-			for (size_t i = 0; i < 2; ++i) {
-				line &tl = *ls[i]; // This line.
-				line &al = *ls[!i]; // Another line.
-				for (size_t j = 0; j < 2; ++j) {
-					point &tp = tl[j]; // This point.
-					line hor(min(al.a.x, al.b.x)-1.0, tp.y, max(al.a.x, al.b.x)+1.0, tp.y);
-					line ver(tp.x, tp.y, tp.x, max(tp.y, max(al.a.y, al.b.y))+1.0);
-					if (tp.y > w.y && rells(hor, al) < 2 && relss(ver, al) > 7) {
-						point z;
-						z.x = al.a.x + (tp.y-al.a.y) * (al.b.x-al.a.x) / (al.b.y-al.a.y);
-						z.y = tp.y;
-						//point z = inpll(hor, al); // It's not so precise. Why?
-						area = max(area, fabs(cross(w - tp, z - tp)) / 2.0);
-					}
-				}
-			}
-
-			printf("%0.2lf\n", area);
-		} else
-			cout << "0.00" << endl;
-	}
-
-	return EXIT_SUCCESS;
+int main(int, char *[]) {
+    while (test());
+    return EXIT_SUCCESS;
 }

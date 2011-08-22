@@ -11,11 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\gt.graph.adj.h" />
-    <ClInclude Include="..\..\..\include\gt.nwf.alg.h" />
+    <ClCompile Include="..\..\..\src\gt.demo.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\gt.demo.cpp" />
+    <ClInclude Include="..\..\..\include\gt.mat.base.h" />
+    <ClInclude Include="..\..\..\include\gt.mat.dijkstra.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{91776399-6052-428B-BDFB-7A0B65E9E463}</ProjectGuid>
