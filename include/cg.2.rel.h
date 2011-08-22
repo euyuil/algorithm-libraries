@@ -7,10 +7,6 @@ namespace glib {
 
 namespace cg {
 
-// Relationship detecting.
-// p: point; l: line; s: segment; o: polygon.
-// raw: means the function will return original calculated value.
-
 /**
  * @brief Calculates the relationship between a point and a line.
  * @param p The point.
@@ -53,6 +49,30 @@ inline int relps(const point &p, const line &s) {
 	if (psa.magsqr() <= psb.magsqr())
 		return -2; // The point is on the line s, near s.a.
 	return 2; // The point is on the line s, near s.b.
+}
+
+/**
+ * @brief Simpler function to calculate the relationship between a point and a
+ *        segment.
+ * @param p The point.
+ * @param s The line segment.
+ * @return  0 if the point is between the two end-points of the segment;
+ *          1 if the point is at either end-point of the segment;
+ *          2 if the point is on the line s;
+ *         -3 if the point is on the left of vector ab of segment s;
+ *          3 if the point is on the right of vector ab of segment s.
+ * @date 2011-08-22
+ */
+
+inline int relpssimp(const point &p, const line &s) {
+	// int rp = sgn(cross(p - s.a, s.vec())); // Rel between p and the line s.
+	int rp = relpl(p, s); // Rel between p and the line s.
+	if (rp) return rp * 3; // -3: .|; 3: |..
+	point psa = s.a - p, psb = s.b - p;
+	int r = sgn(dot(psa, psb));
+	if (r < 0) return 0; // The point is on the segment between end-points.
+	if (r == 0) return 1; // The point is at either end-point.
+	return 2; // The point is on the line s.
 }
 
 /**
@@ -118,11 +138,14 @@ inline int relssraw(const line &sa, const line &sb) {
  * @param sb The other segment.
  * @param raw The raw relationship information between sa and sb. This param
  *        is optional, or you can give the return value of function relssraw.
- * @return See the comments of the function implementation.
+ * @return 0 if standard intersection;
+ *         1~14 if nonstandard intersection, see the comments of the function
+                implementation in detail.
+ *         15 no intersection.
  * @date 2011-08-11
  */
 
-inline int relss(const line &sa, const line &sb, int raw) {
+inline int relssfull(const line &sa, const line &sb, int raw) {
 	signed char r[4], s[4] = {0};
 	*(int *)r = raw;
 	if (r[0] * r[1] == -9 && r[2] * r[3] == -9)
@@ -136,7 +159,7 @@ inline int relss(const line &sa, const line &sb, int raw) {
 	if (s[0] == 2 && s[2] == 2) return 6; // n-std inters. (Long fully cover short).
 	if (s[1] == 4) return 7; // Nonstandard intersection (=), same segment.
 	// if (s[0] == 0 && s[1] == 0)
-	return 8; // No intersection. Maybe parallel, same-line, or others.
+	return 15; // No intersection. Maybe parallel, same-line, or others.
 }
 
 /**
@@ -144,7 +167,23 @@ inline int relss(const line &sa, const line &sb, int raw) {
  */
 
 inline int relss(const line &sa, const line &sb) {
-	return relss(sa, sb, relssraw(sa, sb));
+	return relssfull(sa, sb, relssraw(sa, sb));
+}
+
+/**
+ * @brief Simpler function to calculate the relationship between two segments.
+ * @param sa One segment.
+ * @param sb The other segment.
+ * @return 0 if they intersect each other standardly;
+ *         15 otherwise.
+ * @date 2011-08-22
+ */
+
+inline int relsssimp(const line &sa, const line &sb) {
+	if (relpl(sa.a, sb) ^ relpl(sa.b, sb) == -2 &&
+		relpl(sb.a, sa) ^ relpl(sb.b, sa) == -2)
+		return 0;
+	return 15;
 }
 
 /**

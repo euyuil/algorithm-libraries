@@ -1,10 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\gt.demo.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\..\include\gt.mat.dijkstra.h" />
     <ClInclude Include="..\..\..\include\gt.mat.base.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="demo">
+      <UniqueIdentifier>{d48fea6c-b9ad-478e-901c-31a7955228b0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\gt.demo.cpp">
+      <Filter>demo</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

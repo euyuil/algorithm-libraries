@@ -5,12 +5,17 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="demo">
+      <UniqueIdentifier>{048d39d1-ac24-4443-be58-93e5aad63531}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\str.kmp.h" />
     <ClInclude Include="..\..\..\include\str.trie.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\str.demo.cpp" />
+    <ClCompile Include="..\..\..\src\str.demo.cpp">
+      <Filter>demo</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
