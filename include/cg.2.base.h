@@ -17,7 +17,8 @@ const double inf = 1e+8;
 /**
  * @brief Gets the sign of the float number.
  * @param a The float number.
- * @return -1 if negative, 1 if positive or 0 if the float is considered zero.
+ * @return -1 if negative, 1 if positive or 0 if the float is considered
+ *         zero.
  * @date 2011-08-11
  */
 
@@ -45,9 +46,9 @@ struct point
 	inline point(double _x, double _y) : x(_x), y(_y) { }
 
 	/**
-	 * @brief Returns reference to x if i is false, otherwise reference to y.
-	 *        Usually used in loops, for iterating the two coordinates of a
-	 *        point.
+	 * @brief Returns reference to x if i is false, otherwise reference to
+     *        y. Usually used in loops, for iterating the two coordinates
+     *        of a point.
 	 * @param i The parameter.
 	 * @return See brief.
 	 * @date 2011-08-16
@@ -67,8 +68,8 @@ struct point
 	/**
 	 * @brief Returns the square of magnitude of the point, or the square of
 	 *        the length of the vector. This is frequently used to compare
-	 *        the length of two vectors. If you want to know the exact length
-	 *        of the vector, use mag() instead.
+	 *        the length of two vectors. If you want to know the exact
+     *        length of the vector, use mag() instead.
 	 * @return See brief.
 	 * @date 2011-08-10
 	 */
@@ -76,7 +77,8 @@ struct point
 	inline double magsqr() const { return x * x + y * y; }
 
 	/**
-	 * @brief Returns the magnitude of the point, or the length of the vector.
+	 * @brief Returns the magnitude of the point, or the length of the
+     *        vector.
 	 * @return See brief.
 	 * @date 2011-08-10
 	 */
@@ -130,8 +132,9 @@ struct line
 		a(point(x1, y1)), b(point(x2, y2)) { }
 		
 	/**
-	 * @brief Returns reference to a if i is false, otherwise reference to b.
-	 *        Usually used in loops, for iterating the two points of a line.
+	 * @brief Returns reference to a if i is false, otherwise reference to
+     *        b. Usually used in loops, for iterating the two points of a
+     *        line.
 	 * @param i The parameter.
 	 * @return See brief.
 	 * @date 2011-08-16
@@ -140,8 +143,9 @@ struct line
 	inline point &operator[](bool i) { return i ? b : a; }
 
 	/**
-	 * @brief Makes the ray from the line segment. The point a will become the
-	 *        end-point of the ray and the point b will be extended to inf.
+	 * @brief Makes the ray from the line segment. The point a will become
+     *        the end-point of the ray and the point b will be extended to
+     *        inf.
 	 * @return The ray.
 	 * @date 2011-08-15
 	 */
