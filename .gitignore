@@ -33,3 +33,4 @@ _ReSharper*/
 *.opensdf
 /tmp
 /bin
+*.swp
