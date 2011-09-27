@@ -1,0 +1,24 @@
+USER: Liu Yue [31415926]
+TASK: test
+LANG: C++
+
+Compiling...
+Compile: OK
+
+Executing...
+   Test 1: TEST OK [0.000 secs, 2896 KB]
+   Test 2: TEST OK [0.000 secs, 2896 KB]
+
+All tests OK.
+YOUR PROGRAM ('test') WORKED FIRST TIME!  That's fantastic
+-- and a rare thing.  Please accept these special automated
+congratulations.
+
+Here are the test data inputs:
+
+------- test 1 ----
+1 1
+------- test 2 ----
+3 9
+Keep up the good work!
+Thanks for your submission!

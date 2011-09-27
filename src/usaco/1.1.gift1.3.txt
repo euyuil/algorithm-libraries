@@ -1,0 +1,54 @@
+USER: Liu Yue [31415926]
+TASK: gift1
+LANG: C++
+
+Compiling...
+Compile: OK
+
+Executing...
+  > Run 1: Execution error: Your program (`gift1') exited with signal
+        #11 (segmentation violation [maybe caused by accessing memory out
+        of bounds, array indexing out of bounds, using a bad pointer
+        (failed open(), failed malloc), or going over the maximum
+        specified memory limit]). The program ran for 0.000 CPU seconds
+        before the signal. It used 3028 KB of memory. 
+
+        ------ Data for Run 1 ------
+        10 
+        mitnik 
+        Poulsen 
+        Tanner 
+        Stallman 
+        Ritchie 
+        Baran 
+        Spafford 
+        Farmer 
+        Venema 
+        Linus 
+        mitnik 
+        300 3 
+        Poulsen 
+        Tanner 
+        Baran 
+        Poulsen 
+        1000 1 
+        Tanner 
+        Spafford 
+        2000 9 
+        mitnik 
+        Poulsen 
+        Tanner 
+        Stallman 
+        Ritchie 
+        Baran 
+        Farmer 
+        Venema 
+        Linus 
+        Tanner 
+        ... [and more] ...
+        ----------------------------
+    Test 1: SIGNAL 11 (0.000 secs, 3028 KB)
+
+Full Test Data    Full Answer
+Read this if your program works on your computer but not the grader. Do not write a letter to the coaches until you have tried these techniques!
+Thanks for your submission!
