@@ -1,4 +1,3 @@
-
 *.stackdump
 #ignore thumbnails created by windows
 Thumbs.db
@@ -34,3 +33,14 @@ _ReSharper*/
 /tmp
 /bin
 *.swp
+
+# ignore latex temporary files
+
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.pdf
+*.ps
+*.toc
+*.synctex.gz

@@ -1,0 +1,50 @@
+\documentclass[a4paper,12pt]{book}
+\usepackage{listings}
+\usepackage{xcolor} % It's said that xcolor is a dependency for listings.
+\usepackage{amsmath} %Never write a paper without using amsmath for its many new commands 
+\usepackage{amssymb} %Some extra symbols 
+\usepackage{makeidx} %If you want to generate an index, automatically 
+\usepackage{graphicx} %If you want to include postscript graphics
+\usepackage{bold-extra}
+\usepackage[top=1.25in,bottom=1.25in,left=0.98in,right=0.98in]{geometry}
+% \usepackage{mystyle} %Create your own file, mystyle.sty where you put all your own \newcommand statements, for example. 
+
+\begin{document}
+
+% Settings for listings.
+\lstset{numbers=left}
+\lstset{language=C++}
+\lstset{keywordstyle=\bfseries\color{blue!40!black}}
+\lstset{commentstyle=\color{green!30!black}}
+% \lstset{frame=single}
+\lstset{frame=shadowbox}
+\lstset{rulesepcolor=\color{white!70!black}}
+\lstset{breaklines}
+\lstset{extendedchars=false}
+\lstset{tabsize=4}
+\lstset{basicstyle=\ttfamily}
+\lstset{xleftmargin=2em}
+% \lstset{xrightmargin=2em}
+% \lstset{aboveskip=1em}
+\lstset{belowskip=1.25em}
+
+\author{Liu Yue}
+\title{General Algorithm TEmplate Libraries}
+\date{April 13, 2012 $\sim$ \today}
+\maketitle
+
+\frontmatter
+\tableofcontents
+\include{preface}
+
+\mainmatter
+\include{graph}
+
+\backmatter
+% \include{glossary}
+% \include{notat}
+\bibliographystyle{amsalpha} %The style you want to use for references.
+\bibliography{mr,refs} %The files containing all the articles and books you ever referenced.
+\printindex %Make an index AUTOMATICALLY
+
+\end{document}
