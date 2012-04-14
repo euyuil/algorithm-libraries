@@ -1,0 +1,139 @@
+\chapter{Computational Geometry}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Fundamental}
+
+\subsection{Precision Controlling}
+\label{cgeom:precision}
+
+These functions is implemented to compare two float numbers using precision
+controlling. \emph{Almost all} computational geometry functions depend on
+these.
+
+\lstinputlisting{../include/cgeom/precision.h}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \section{Data Structures}
+
+\subsection{Point Definitions}
+\label{cgeom:pointdef}
+
+\lstinputlisting{../include/cgeom/point.h}
+
+\subsection{Line Definitions}
+
+\lstinputlisting{../include/cgeom/line.h}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Utility Functions}
+\label{cgeom:utility}
+
+These functions might be used in some algorithms.
+
+\lstinputlisting{../include/cgeom/utility.h}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Relationship of Points, Lines and Line Segments}
+
+\subsection{Relationship of Two Points}
+
+This function is implemented in the overwritten \identif{operator=} in
+\identif{point}. Please refer to section \ref{cgeom:pointdef} on page
+\pageref{cgeom:pointdef}.
+
+\subsection{Relationship of One Point and One Line}
+\label{cgeom:relpl}
+
+Definition of \identif{point} and \identif{line} is required. Notice that
+\identif{sgn} in section \ref{cgeom:precision} and \identif{cross} in section
+\ref{cgeom:utility} were used. In the following I will not waste paper to say
+these dependencies because they are so widely used and/or so easy to inspect.
+
+\lstinputlisting{../include/cgeom/relpl.h}
+
+\subsection{Relationship of One Point and One Line Segment}
+
+Function \identif{relpl} in section \ref{cgeom:relpl} on page
+\pageref{cgeom:relpl} is required. In most cases, \identif{relpssimp} is
+enough. If you want to know which endpoint that the point is exactly at, you
+should use the full version \identif{relps}.
+
+\lstinputlisting{../include/cgeom/relps.h}
+
+\subsection{Relationship of Two Lines}
+
+Function \identif{relpl} in section \ref{cgeom:relpl} on page
+\pageref{cgeom:relpl} is required.
+
+\lstinputlisting{../include/cgeom/relll.h}
+
+\subsection{Relationship of One Line and One Line Segment}
+
+Function \identif{relpl} in section \ref{cgeom:relpl} on page
+\pageref{cgeom:relpl} is required.
+
+\lstinputlisting{../include/cgeom/rells.h}
+
+\subsection{Relationship of Two Line Segments}
+\label{cgeom:relss}
+
+This one is complicated. I will add things about it in the future.
+
+\lstinputlisting{../include/cgeom/relss.h}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Relationship about Polygons}
+
+\subsection{Relationship of One Point and One Polygon}
+
+Functions \identif{relss} and \identif{relssraw} in section \ref{cgeom:relss}
+on page \pageref{cgeom:relss} are required.
+
+\lstinputlisting{../include/cgeom/relppo.h}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Intersection of Shapes}
+
+\subsection{Intersection Point of Two Lines}
+
+\lstinputlisting{../include/cgeom/inpll.h}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Distance between Shapes}
+
+\subsection{Distance between Two Points}
+
+\lstinputlisting{../include/cgeom/dispp.h}
+
+\subsection{Distance between One Point and One Line}
+
+\lstinputlisting{../include/cgeom/displ.h}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Area of Shapes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Transformation of Shapes}
+
+\subsection{Rotate One Point around Given Center for Given Angle}
+
+\lstinputlisting{../include/cgeom/rotpcr.h}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Convex Hull}
+
+\subsection{Graham Algorithm}
+
+Calculates convex hull of given point set in $O(n\log{n})$ worst case.
+
+\lstinputlisting{../include/cgeom/graham.h}

@@ -1,11 +1,28 @@
 \chapter{Graph Theory}
 
-\section{Graph Definitions}
+
+\section{Graph Representation}
 
 \subsection{Adjacent List}
+
+For the template parameters, V is the number of vertices, E is the number of
+edges.
 
 \lstinputlisting{../include/graph/glist.h}
 
 \subsection{Adjacent Matrix}
 
+For the template parameter, V is the number of vertices.
+
 \lstinputlisting{../include/graph/gmatrix.h}
+
+
+\section{Shortest Path}
+
+\subsection{Dijkstra Algorithm for Adjacent Matrix Graphs}
+
+This implementation for Dijkstra Algorithm requires the graph which is
+represented in adjacent matrix. It's not optimized so in worst case it is
+$O(n^2)$.
+
+\lstinputlisting{../include/graph/dijkstra.h}
