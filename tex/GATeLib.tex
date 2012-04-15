@@ -1,19 +1,20 @@
-\documentclass[a4paper,11pt]{book}
+\documentclass[a4paper,11pt]{ctexbook}
 \usepackage{CJK}
-\usepackage{fontspec}
-\usepackage{xunicode,xltxtra}
+% \usepackage{fontspec}
+% \usepackage{xunicode,xltxtra}
 
 \usepackage{listings}
 \usepackage{xcolor} % It's said that xcolor is a dependency for listings.
 
-\usepackage{amsmath} %Never write a paper without using amsmath for its many new commands 
-\usepackage{amssymb} %Some extra symbols 
-\usepackage{makeidx} %If you want to generate an index, automatically 
+\usepackage{amsmath} %Never write a paper without using amsmath for its many new commands
+\usepackage{amssymb} %Some extra symbols
+\usepackage{makeidx} %If you want to generate an index, automatically
 \usepackage{graphicx} %If you want to include postscript graphics
 \usepackage{bold-extra}
 \usepackage[top=1.25in,bottom=1.25in,left=0.98in,right=0.98in]{geometry}
 
 \begin{document}
+\begin{CJK*}{GBK}{song}
 
 % Settings for listings.
 \lstset{numbers=left}
@@ -26,28 +27,26 @@
 \lstset{breaklines}
 \lstset{extendedchars=false}
 \lstset{tabsize=4}
-\lstset{basicstyle=\footnotesize\ttfamily}
+\lstset{basicstyle=\ttfamily\fontsize{9pt}{11pt}\selectfont}
 \lstset{xleftmargin=2em}
 % \lstset{xrightmargin=2em}
 % \lstset{aboveskip=1em}
 \lstset{belowskip=1em}
 
 \newcommand{\identif}[1]{\colorbox{white!90!black}{\texttt{#1}}}
+\newcommand{\cjksong}[1]{\begin{CJK*}{GBK}{song}#1\end{CJK*}}
 
-\author{Liu Yue (EUYUIL)}
+\author{¡ı‘æ~(EUYUIL)}
 \title{General Algorithm TEmplate Libraries}
-\date{August 9, 2011 $\sim$ \today}
+\date{2011~ƒÍ~8~‘¬~9~»’~$\sim$~\today}
 \maketitle
-
-\begin{CJK*}{GBK}{song}
-‰Ω†
-\end{CJK*}
 
 \frontmatter
 \tableofcontents
 % \include{preface}
 
 \mainmatter
+\include{dtstc}
 \include{graph}
 \include{cgeom}
 
@@ -58,4 +57,5 @@
 % \bibliography{mr,refs} %The files containing all the articles and books you ever referenced.
 % \printindex %Make an index AUTOMATICALLY
 
+\end{CJK*}
 \end{document}

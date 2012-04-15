@@ -1,28 +1,34 @@
-\chapter{Graph Theory}
+\chapter{图论}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Graph Representation}
+\section{图的表示}
 
-\subsection{Adjacent List}
+\subsection{邻接表}
 
-For the template parameters, V is the number of vertices, E is the number of
-edges.
+模板参数中，\identif{V}~为最大顶点数，\identif{E}~为最大边数。顶点数由使用者维护，
+边数由本类维护。
 
 \lstinputlisting{../include/graph/glist.h}
 
-\subsection{Adjacent Matrix}
+\subsection{邻接矩阵}
 
-For the template parameter, V is the number of vertices.
+模板参数中，\identif{V}~为最大顶点数。
 
 \lstinputlisting{../include/graph/gmatrix.h}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Shortest Path}
+\section{最短路问题}
 
-\subsection{Dijkstra Algorithm for Adjacent Matrix Graphs}
+\subsection{Dijkstra 算法（邻接矩阵表示）}
 
-This implementation for Dijkstra Algorithm requires the graph which is
-represented in adjacent matrix. It's not optimized so in worst case it is
-$O(n^2)$.
+该算法未经优化，复杂度为~$O(n^2)$。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{最大流问题}
+
+\subsection{Dinic 算法}
 
 \lstinputlisting{../include/graph/dijkstra.h}

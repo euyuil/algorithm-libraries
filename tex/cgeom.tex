@@ -1,15 +1,15 @@
-\chapter{Computational Geometry}
+\chapter{计算几何}
+
+本章是计算几何算法的模板。若未特别说明，算法一般是~$O(1)$~的。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Fundamental}
+\section{基础算法与数据结构}
 
-\subsection{Precision Controlling}
+\subsection{精度控制}
 \label{cgeom:precision}
 
-These functions is implemented to compare two float numbers using precision
-controlling. \emph{Almost all} computational geometry functions depend on
-these.
+这些函数使用精度控制来比较浮点数之间的关系，\emph{几乎所有}计算几何算法的实现都依赖这些函数。
 
 \lstinputlisting{../include/cgeom/precision.h}
 
@@ -17,68 +17,59 @@ these.
 
 % \section{Data Structures}
 
-\subsection{Point Definitions}
+\subsection{点的定义}
 \label{cgeom:pointdef}
 
 \lstinputlisting{../include/cgeom/point.h}
 
-\subsection{Line Definitions}
+\subsection{直线、线段定义}
 
 \lstinputlisting{../include/cgeom/line.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Utility Functions}
+\subsection{工具函数}
 \label{cgeom:utility}
 
-These functions might be used in some algorithms.
+某些算法的实现可能会用到这些函数。
 
 \lstinputlisting{../include/cgeom/utility.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Relationship of Points, Lines and Line Segments}
+\section{点、直线、线段的关系}
 
-\subsection{Relationship of Two Points}
+\subsection{两点间关系}
 
-This function is implemented in the overwritten \identif{operator=} in
-\identif{point}. Please refer to section \ref{cgeom:pointdef} on page
-\pageref{cgeom:pointdef}.
+这个功能在~\identif{point}~结构重载的~\identif{operator==}~函数中已经实现，参见~
+\ref{cgeom:pointdef}~节（第~\pageref{cgeom:pointdef}~页）。
 
-\subsection{Relationship of One Point and One Line}
+\subsection{点与直线的关系}
 \label{cgeom:relpl}
-
-Definition of \identif{point} and \identif{line} is required. Notice that
-\identif{sgn} in section \ref{cgeom:precision} and \identif{cross} in section
-\ref{cgeom:utility} were used. In the following I will not waste paper to say
-these dependencies because they are so widely used and/or so easy to inspect.
 
 \lstinputlisting{../include/cgeom/relpl.h}
 
-\subsection{Relationship of One Point and One Line Segment}
+\subsection{点与线段的关系}
 
-Function \identif{relpl} in section \ref{cgeom:relpl} on page
-\pageref{cgeom:relpl} is required. In most cases, \identif{relpssimp} is
-enough. If you want to know which endpoint that the point is exactly at, you
-should use the full version \identif{relps}.
+该实现依赖于~\ref{cgeom:relpl}~节（第~\pageref{cgeom:relpl}~页）的~\identif{relpl}。
+大多数情况下，使用~\identif{relpssimp}~就够了。如果你想知道点在线段的哪个端点上，你可以用
+这个算法的完全版~\identif{relps}。
 
 \lstinputlisting{../include/cgeom/relps.h}
 
-\subsection{Relationship of Two Lines}
+\subsection{两直线间关系}
 
-Function \identif{relpl} in section \ref{cgeom:relpl} on page
-\pageref{cgeom:relpl} is required.
+该实现依赖于~\ref{cgeom:relpl}~节（第~\pageref{cgeom:relpl}~页）的~\identif{relpl}。
 
 \lstinputlisting{../include/cgeom/relll.h}
 
-\subsection{Relationship of One Line and One Line Segment}
+\subsection{直线与线段的关系}
 
-Function \identif{relpl} in section \ref{cgeom:relpl} on page
-\pageref{cgeom:relpl} is required.
+该实现依赖于~\ref{cgeom:relpl}~节（第~\pageref{cgeom:relpl}~页）的~\identif{relpl}。
 
 \lstinputlisting{../include/cgeom/rells.h}
 
-\subsection{Relationship of Two Line Segments}
+\subsection{两线段间关系}
 \label{cgeom:relss}
 
 This one is complicated. I will add things about it in the future.
@@ -87,53 +78,53 @@ This one is complicated. I will add things about it in the future.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Relationship about Polygons}
+\section{与多边形有关的关系}
 
-\subsection{Relationship of One Point and One Polygon}
+\subsection{点与多边形关系}
 
-Functions \identif{relss} and \identif{relssraw} in section \ref{cgeom:relss}
-on page \pageref{cgeom:relss} are required.
+该实现依赖于~\ref{cgeom:relss}~节（第~\pageref{cgeom:relss}~页）的~\identif{relss}~
+和~\identif{relssraw}。
 
 \lstinputlisting{../include/cgeom/relppo.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Intersection of Shapes}
+\section{图形间相交问题}
 
-\subsection{Intersection Point of Two Lines}
+\subsection{两直线交点}
 
 \lstinputlisting{../include/cgeom/inpll.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Distance between Shapes}
+\section{图形间距离问题}
 
-\subsection{Distance between Two Points}
+\subsection{两点间距离}
 
 \lstinputlisting{../include/cgeom/dispp.h}
 
-\subsection{Distance between One Point and One Line}
+\subsection{点与直线间距离}
 
 \lstinputlisting{../include/cgeom/displ.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Area of Shapes}
+\section{图形面积问题}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Transformation of Shapes}
+\section{图形变换问题}
 
-\subsection{Rotate One Point around Given Center for Given Angle}
+\subsection{将一点以某中心旋转某角度}
 
 \lstinputlisting{../include/cgeom/rotpcr.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Convex Hull}
+\section{凸包问题}
 
-\subsection{Graham Algorithm}
+\subsection{Graham 算法}
 
-Calculates convex hull of given point set in $O(n\log{n})$ worst case.
+计算给出的点集的凸包，最坏情况为~$O(n\log{n})$。
 
 \lstinputlisting{../include/cgeom/graham.h}
