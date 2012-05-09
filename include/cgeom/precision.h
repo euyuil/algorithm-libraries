@@ -27,5 +27,8 @@ inline int sgn(double a) {
 inline bool lt(double a, double b) { return sgn(a - b) < 0; }
 inline bool gt(double a, double b) { return sgn(a - b) > 0; }
 inline bool eq(double a, double b) { return sgn(a - b) == 0; }
+inline bool eq(double a, double b, double c) {
+    return eq(a, b) && eq(b, c) && eq(a, c);
+}
 
 #endif /* _CGEOM_BASIC_H_ */

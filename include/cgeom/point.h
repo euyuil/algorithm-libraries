@@ -24,6 +24,22 @@ struct point
 	inline point operator*(double k) const { return point(x * k, y * k); }
 	inline point operator/(double k) const { return point(x / k, y / k); }
 
+	inline point &operator+=(const point &p) {
+		x += p.x; y += p.y; return *this;
+	}
+
+	inline point &operator-=(const point &p) {
+		x -= p.x; y -= p.y; return *this;
+	}
+
+	inline point &operator*=(const point &p) {
+		x *= p.x; y *= p.y; return *this;
+	}
+
+	inline point &operator/=(const point &p) {
+		x /= p.x; y /= p.y; return *this;
+	}
+
 	inline bool operator==(const point &p) const {
 		return !sgn(x - p.x) && !sgn(y - p.y);
 	}

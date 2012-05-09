@@ -26,6 +26,18 @@
 
 \lstinputlisting{../include/cgeom/line.h}
 
+\subsection{圆形定义}
+
+\lstinputlisting{../include/cgeom/circle.h}
+
+\subsection{简单多边形定义}
+
+简单多边形的定义事实上就是点的序列，按照逆时针方向依次列出点即可。或者说，多边形的定义如下：
+
+\begin{lstlisting}
+typedef vector<point> polygon;
+\end{lstlisting}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{工具函数}
@@ -78,7 +90,17 @@ This one is complicated. I will add things about it in the future.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{与圆形有关的关系}
+
+\lstinputlisting{../include/cgeom/ccrel.h}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{与多边形有关的关系}
+
+\subsection{判断两个三角形是否相似}
+
+\lstinputlisting{../include/cgeom/simtrtr.h}
 
 \subsection{点与多边形关系}
 
@@ -135,4 +157,10 @@ This one is complicated. I will add things about it in the future.
 
 计算给出的点集的凸包，最坏情况为~$O(n\log{n})$。
 
+\subsubsection{使用迭代器的 Graham 算法}
+
 \lstinputlisting{../include/cgeom/graham.h}
+
+\subsubsection{使用向量的 Graham 算法}
+
+\lstinputlisting{../include/cgeom/grahamvec.h}
