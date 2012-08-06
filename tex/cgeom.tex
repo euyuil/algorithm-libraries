@@ -1,15 +1,15 @@
-\chapter{¼ÆËã¼¸ºÎ}
+\chapter{è®¡ç®—å‡ ä½•}
 
-±¾ÕÂÊÇ¼ÆËã¼¸ºÎËã·¨µÄÄ£°å¡£ÈôÎ´ÌØ±ğËµÃ÷£¬Ëã·¨Ò»°ãÊÇ~$O(1)$~µÄ¡£
+æœ¬ç« æ˜¯è®¡ç®—å‡ ä½•ç®—æ³•çš„æ¨¡æ¿ã€‚è‹¥æœªç‰¹åˆ«è¯´æ˜ï¼Œç®—æ³•ä¸€èˆ¬æ˜¯~$O(1)$~çš„ã€‚
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{»ù´¡Ëã·¨ÓëÊı¾İ½á¹¹}
+\section{åŸºç¡€ç®—æ³•ä¸æ•°æ®ç»“æ„}
 
-\subsection{¾«¶È¿ØÖÆ}
+\subsection{ç²¾åº¦æ§åˆ¶}
 \label{cgeom:precision}
 
-ÕâĞ©º¯ÊıÊ¹ÓÃ¾«¶È¿ØÖÆÀ´±È½Ï¸¡µãÊıÖ®¼äµÄ¹ØÏµ£¬\emph{¼¸ºõËùÓĞ}¼ÆËã¼¸ºÎËã·¨µÄÊµÏÖ¶¼ÒÀÀµÕâĞ©º¯Êı¡£
+è¿™äº›å‡½æ•°ä½¿ç”¨ç²¾åº¦æ§åˆ¶æ¥æ¯”è¾ƒæµ®ç‚¹æ•°ä¹‹é—´çš„å…³ç³»ï¼Œ\emph{å‡ ä¹æ‰€æœ‰}è®¡ç®—å‡ ä½•ç®—æ³•çš„å®ç°éƒ½ä¾èµ–è¿™äº›å‡½æ•°ã€‚
 
 \lstinputlisting{../include/cgeom/precision.h}
 
@@ -17,22 +17,22 @@
 
 % \section{Data Structures}
 
-\subsection{µãµÄ¶¨Òå}
+\subsection{ç‚¹çš„å®šä¹‰}
 \label{cgeom:pointdef}
 
 \lstinputlisting{../include/cgeom/point.h}
 
-\subsection{Ö±Ïß¡¢Ïß¶Î¶¨Òå}
+\subsection{ç›´çº¿ã€çº¿æ®µå®šä¹‰}
 
 \lstinputlisting{../include/cgeom/line.h}
 
-\subsection{Ô²ĞÎ¶¨Òå}
+\subsection{åœ†å½¢å®šä¹‰}
 
 \lstinputlisting{../include/cgeom/circle.h}
 
-\subsection{¼òµ¥¶à±ßĞÎ¶¨Òå}
+\subsection{ç®€å•å¤šè¾¹å½¢å®šä¹‰}
 
-¼òµ¥¶à±ßĞÎµÄ¶¨ÒåÊÂÊµÉÏ¾ÍÊÇµãµÄĞòÁĞ£¬°´ÕÕÄæÊ±Õë·½ÏòÒÀ´ÎÁĞ³öµã¼´¿É¡£»òÕßËµ£¬¶à±ßĞÎµÄ¶¨ÒåÈçÏÂ£º
+ç®€å•å¤šè¾¹å½¢çš„å®šä¹‰äº‹å®ä¸Šå°±æ˜¯ç‚¹çš„åºåˆ—ï¼ŒæŒ‰ç…§é€†æ—¶é’ˆæ–¹å‘ä¾æ¬¡åˆ—å‡ºç‚¹å³å¯ã€‚æˆ–è€…è¯´ï¼Œå¤šè¾¹å½¢çš„å®šä¹‰å¦‚ä¸‹ï¼š
 
 \begin{lstlisting}
 typedef vector<point> polygon;
@@ -40,48 +40,48 @@ typedef vector<point> polygon;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{¹¤¾ßº¯Êı}
+\subsection{å·¥å…·å‡½æ•°}
 \label{cgeom:utility}
 
-Ä³Ğ©Ëã·¨µÄÊµÏÖ¿ÉÄÜ»áÓÃµ½ÕâĞ©º¯Êı¡£
+æŸäº›ç®—æ³•çš„å®ç°å¯èƒ½ä¼šç”¨åˆ°è¿™äº›å‡½æ•°ã€‚
 
 \lstinputlisting{../include/cgeom/utility.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{µã¡¢Ö±Ïß¡¢Ïß¶ÎµÄ¹ØÏµ}
+\section{ç‚¹ã€ç›´çº¿ã€çº¿æ®µçš„å…³ç³»}
 
-\subsection{Á½µã¼ä¹ØÏµ}
+\subsection{ä¸¤ç‚¹é—´å…³ç³»}
 
-Õâ¸ö¹¦ÄÜÔÚ~\identif{point}~½á¹¹ÖØÔØµÄ~\identif{operator==}~º¯ÊıÖĞÒÑ¾­ÊµÏÖ£¬²Î¼û~
-\ref{cgeom:pointdef}~½Ú£¨µÚ~\pageref{cgeom:pointdef}~Ò³£©¡£
+è¿™ä¸ªåŠŸèƒ½åœ¨~\identif{point}~ç»“æ„é‡è½½çš„~\identif{operator==}~å‡½æ•°ä¸­å·²ç»å®ç°ï¼Œå‚è§~
+\ref{cgeom:pointdef}~èŠ‚ï¼ˆç¬¬~\pageref{cgeom:pointdef}~é¡µï¼‰ã€‚
 
-\subsection{µãÓëÖ±ÏßµÄ¹ØÏµ}
+\subsection{ç‚¹ä¸ç›´çº¿çš„å…³ç³»}
 \label{cgeom:relpl}
 
 \lstinputlisting{../include/cgeom/relpl.h}
 
-\subsection{µãÓëÏß¶ÎµÄ¹ØÏµ}
+\subsection{ç‚¹ä¸çº¿æ®µçš„å…³ç³»}
 
-¸ÃÊµÏÖÒÀÀµÓÚ~\ref{cgeom:relpl}~½Ú£¨µÚ~\pageref{cgeom:relpl}~Ò³£©µÄ~\identif{relpl}¡£
-´ó¶àÊıÇé¿öÏÂ£¬Ê¹ÓÃ~\identif{relpssimp}~¾Í¹»ÁË¡£Èç¹ûÄãÏëÖªµÀµãÔÚÏß¶ÎµÄÄÄ¸ö¶ËµãÉÏ£¬Äã¿ÉÒÔÓÃ
-Õâ¸öËã·¨µÄÍêÈ«°æ~\identif{relps}¡£
+è¯¥å®ç°ä¾èµ–äº~\ref{cgeom:relpl}~èŠ‚ï¼ˆç¬¬~\pageref{cgeom:relpl}~é¡µï¼‰çš„~\identif{relpl}ã€‚
+å¤§å¤šæ•°æƒ…å†µä¸‹ï¼Œä½¿ç”¨~\identif{relpssimp}~å°±å¤Ÿäº†ã€‚å¦‚æœä½ æƒ³çŸ¥é“ç‚¹åœ¨çº¿æ®µçš„å“ªä¸ªç«¯ç‚¹ä¸Šï¼Œä½ å¯ä»¥ç”¨
+è¿™ä¸ªç®—æ³•çš„å®Œå…¨ç‰ˆ~\identif{relps}ã€‚
 
 \lstinputlisting{../include/cgeom/relps.h}
 
-\subsection{Á½Ö±Ïß¼ä¹ØÏµ}
+\subsection{ä¸¤ç›´çº¿é—´å…³ç³»}
 
-¸ÃÊµÏÖÒÀÀµÓÚ~\ref{cgeom:relpl}~½Ú£¨µÚ~\pageref{cgeom:relpl}~Ò³£©µÄ~\identif{relpl}¡£
+è¯¥å®ç°ä¾èµ–äº~\ref{cgeom:relpl}~èŠ‚ï¼ˆç¬¬~\pageref{cgeom:relpl}~é¡µï¼‰çš„~\identif{relpl}ã€‚
 
 \lstinputlisting{../include/cgeom/relll.h}
 
-\subsection{Ö±ÏßÓëÏß¶ÎµÄ¹ØÏµ}
+\subsection{ç›´çº¿ä¸çº¿æ®µçš„å…³ç³»}
 
-¸ÃÊµÏÖÒÀÀµÓÚ~\ref{cgeom:relpl}~½Ú£¨µÚ~\pageref{cgeom:relpl}~Ò³£©µÄ~\identif{relpl}¡£
+è¯¥å®ç°ä¾èµ–äº~\ref{cgeom:relpl}~èŠ‚ï¼ˆç¬¬~\pageref{cgeom:relpl}~é¡µï¼‰çš„~\identif{relpl}ã€‚
 
 \lstinputlisting{../include/cgeom/rells.h}
 
-\subsection{Á½Ïß¶Î¼ä¹ØÏµ}
+\subsection{ä¸¤çº¿æ®µé—´å…³ç³»}
 \label{cgeom:relss}
 
 This one is complicated. I will add things about it in the future.
@@ -90,77 +90,77 @@ This one is complicated. I will add things about it in the future.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{ÓëÔ²ĞÎÓĞ¹ØµÄ¹ØÏµ}
+\section{ä¸åœ†å½¢æœ‰å…³çš„å…³ç³»}
 
 \lstinputlisting{../include/cgeom/ccrel.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Óë¶à±ßĞÎÓĞ¹ØµÄ¹ØÏµ}
+\section{ä¸å¤šè¾¹å½¢æœ‰å…³çš„å…³ç³»}
 
-\subsection{ÅĞ¶ÏÁ½¸öÈı½ÇĞÎÊÇ·ñÏàËÆ}
+\subsection{åˆ¤æ–­ä¸¤ä¸ªä¸‰è§’å½¢æ˜¯å¦ç›¸ä¼¼}
 
 \lstinputlisting{../include/cgeom/simtrtr.h}
 
-\subsection{µãÓë¶à±ßĞÎ¹ØÏµ}
+\subsection{ç‚¹ä¸å¤šè¾¹å½¢å…³ç³»}
 
-¸ÃÊµÏÖÒÀÀµÓÚ~\ref{cgeom:relss}~½Ú£¨µÚ~\pageref{cgeom:relss}~Ò³£©µÄ~\identif{relss}~
-ºÍ~\identif{relssraw}¡£
+è¯¥å®ç°ä¾èµ–äº~\ref{cgeom:relss}~èŠ‚ï¼ˆç¬¬~\pageref{cgeom:relss}~é¡µï¼‰çš„~\identif{relss}~
+å’Œ~\identif{relssraw}ã€‚
 
 \lstinputlisting{../include/cgeom/relppo.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Í¼ĞÎ¼äÏà½»ÎÊÌâ}
+\section{å›¾å½¢é—´ç›¸äº¤é—®é¢˜}
 
-\subsection{Á½Ö±Ïß½»µã}
+\subsection{ä¸¤ç›´çº¿äº¤ç‚¹}
 
 \lstinputlisting{../include/cgeom/inpll.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Í¼ĞÎ¼ä¾àÀëÎÊÌâ}
+\section{å›¾å½¢é—´è·ç¦»é—®é¢˜}
 
-\subsection{Á½µã¼ä¾àÀë}
+\subsection{ä¸¤ç‚¹é—´è·ç¦»}
 
 \lstinputlisting{../include/cgeom/dispp.h}
 
-\subsection{µãÓëÖ±Ïß¼ä¾àÀë}
+\subsection{ç‚¹ä¸ç›´çº¿é—´è·ç¦»}
 
 \lstinputlisting{../include/cgeom/displ.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Í¼ĞÎÃæ»ıÎÊÌâ}
+\section{å›¾å½¢é¢ç§¯é—®é¢˜}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Í¼ĞÎ±ä»»ÎÊÌâ}
+\section{å›¾å½¢å˜æ¢é—®é¢˜}
 
-\subsection{½«Ò»µãÒÔÄ³ÖĞĞÄĞı×ªÄ³½Ç¶È}
+\subsection{å°†ä¸€ç‚¹ä»¥æŸä¸­å¿ƒæ—‹è½¬æŸè§’åº¦}
 
 \lstinputlisting{../include/cgeom/rotpcr.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{»ùÓÚ¾ØÕóµÄÍ¼ĞÎ±ä»»}
+\section{åŸºäºçŸ©é˜µçš„å›¾å½¢å˜æ¢}
 
-×¢Òâ°ÑÕâ¸öÎÄ¼ş²ğ·Öµô¡£
+æ³¨æ„æŠŠè¿™ä¸ªæ–‡ä»¶æ‹†åˆ†æ‰ã€‚
 
 \lstinputlisting{../include/cgeom/matrans.h}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Í¹°üÎÊÌâ}
+\section{å‡¸åŒ…é—®é¢˜}
 
-\subsection{Graham Ëã·¨}
+\subsection{Graham ç®—æ³•}
 
-¼ÆËã¸ø³öµÄµã¼¯µÄÍ¹°ü£¬×î»µÇé¿öÎª~$O(n\log{n})$¡£
+è®¡ç®—ç»™å‡ºçš„ç‚¹é›†çš„å‡¸åŒ…ï¼Œæœ€åæƒ…å†µä¸º~$O(n\log{n})$ã€‚
 
-\subsubsection{Ê¹ÓÃµü´úÆ÷µÄ Graham Ëã·¨}
+\subsubsection{ä½¿ç”¨è¿­ä»£å™¨çš„ Graham ç®—æ³•}
 
 \lstinputlisting{../include/cgeom/graham.h}
 
-\subsubsection{Ê¹ÓÃÏòÁ¿µÄ Graham Ëã·¨}
+\subsubsection{ä½¿ç”¨å‘é‡çš„ Graham ç®—æ³•}
 
 \lstinputlisting{../include/cgeom/grahamvec.h}
